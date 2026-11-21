@@ -1924,3 +1924,6 @@ body {
     gap: 14px;
   }
 }
+
+/* Bound full-bleed production previews to their Library panel. */
+.ft-lp-shadow-host { contain: layout paint; overflow: clip; min-width: 0; }
