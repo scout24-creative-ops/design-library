@@ -43,6 +43,7 @@ jobs:
           library_review_status=0
           node tests/check_buttons.cjs || library_review_status=$?
           node tests/check_optimizations.cjs || library_review_status=$?
+          node tests/check_layout.cjs || library_review_status=$?
           exit "$library_review_status"
       - uses: actions/upload-artifact@v4
         if: always()

@@ -115,3 +115,22 @@ Die öffentliche Library-URL und alle vorhandenen Root-Dateiadressen bleiben
 bestehen. Bestehende LP-Runtime-Dateien und Contentful-Assets werden hier nicht
 verändert. Das alte öffentliche Library-Repo bleibt ausschließlich für die schon
 veröffentlichten Weiterleitungen und historischen Asset-URLs bestehen.
+
+## Verbindliche Vorschau-Geometrie
+
+Die Library-Oberfläche ist unabhängig von der gerenderten Modulfläche. `preview.html`
+und `preview.js` rendern Originalmarkup in sandboxed Iframes mit echten CSS-Viewports.
+Desktop/Mobil wählt LP 1600/392 px oder E-Mail 1150/400 px aus der generierten
+`layout`-Definition in `content-data.js`. Die äußere UI verkleinert nur visuell;
+Media Queries laufen im tatsächlichen Iframe-Viewport.
+
+Der LP-Wrapper bildet Contentful mit maximal 1200 px inklusive 16/24/32 px Padding
+nach; der E-Mail-Wrapper ist maximal 600 px breit und addiert kein Modul-Padding.
+Kopieraktionen bleiben außerhalb der Vorschau und liefern das kanonische Markup.
+Produktions-CSS/Runtime bleiben auf ihren bestehenden URLs verlinkt. Die noch
+ausgelieferte Hero-Sonderbreite wird nicht durch Vorschau-CSS versteckt; ihre
+Angleichung in `lp-builder/modules/contentful-runtime/` braucht einen separaten Release.
+
+Prüfen: `node tests/check_layout.cjs` testet alle 72 Module an beiden Referenzbreiten
+und zusätzliche responsive Grenzen. Die vorhandenen Button-, Icon-, Tabellen-,
+Accordion- und Navigationsprüfungen verwenden dieselben isolierten Dokumente.

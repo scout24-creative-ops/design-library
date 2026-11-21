@@ -108,19 +108,15 @@ def build_lp_shadow_styles():
         '--color-text-inversive':'var(--gray-100)','--color-text-weak':'var(--gray-650)',
         '--border-radius-400':t['radius']['16'],'--border-radius-600':t['radius']['24'],
         '--border-radius-rounded':t['radius']['pill']}
-    return '/* Preview containment only. Production bridge is linked, never duplicated. */\n:host{'+''.join(k+':'+v+';' for k,v in variables.items())+'''
---module-content-max:1170px;--module-content-max-mobile:374px;}
-*{box-sizing:border-box;}
-.frame-root{width:100%;color:var(--gray-1000);font-family:"Make It Better",Arial,sans-serif;}
-.frame-root:not(.frame-root--element)>*{width:min(100%,var(--module-content-max));margin-left:auto;margin-right:auto;}
-.frame-root .lpb-hero{width:100%!important;margin-left:0!important;margin-right:0!important;}
-.frame-root .lpb-hero--bleed:not(.lpb-hero--centered) .lpb-hero__content{max-width:var(--module-content-max);}
-.frame-root img[src=""]{visibility:hidden;}
-/* Keep the scroll-triggered footer visible inside its catalogue frame. */
-.frame-root .lpb-sticky-footer{position:relative!important;inset:auto!important;transform:none!important;transition:none!important;z-index:0!important;}
-.frame-root .lpb-sticky-footer::before{width:100%!important;}
-@media(max-width:740px){.frame-root:not(.frame-root--element)>*{width:min(100%,var(--module-content-max-mobile));}}
-'''
+    layout=t['layout']['lp']
+    rules='/* Preview containment only. Production module CSS stays linked. */\n:host{'+''.join(k+':'+v+';' for k,v in variables.items())+'}\n'
+    rules+='*{box-sizing:border-box;}\n.frame-root{display:flow-root;width:100%%;max-width:%dpx;margin:0 auto;padding:0 %dpx;color:var(--gray-1000);font-family:"Make It Better",Arial,sans-serif;}\n' % (layout['containerMaxWidth'],layout['paddingInline'][0]['value'])
+    for step in layout['paddingInline'][1:]:
+        rules+='@media(min-width:%dpx){.frame-root{padding-left:%dpx;padding-right:%dpx;}}\n' % (step['minWidth'],step['value'],step['value'])
+    # The catalogue makes the normally scroll-triggered footer inspectable.
+    rules+='.frame-root .lpb-sticky-footer{position:relative!important;inset:auto!important;transform:none!important;transition:none!important;z-index:0!important;}\n'
+    return rules
+
 
 
 def render_markup_assignment(markup):

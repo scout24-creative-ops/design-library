@@ -25,7 +25,7 @@ class LibrarySnapshot(unittest.TestCase):
     def test_snapshot_fingerprint_and_privacy(self):
         manifest=json.loads((ROOT/'manifest.json').read_text())
         self.assertEqual({'name','sections','moduleCounts','buildDigest'},set(manifest))
-        names=['content-data.js','email-preview-styles.css','lp-module-markup.js','lp-shadow-styles.js','index.html','app.js','styles.css']
+        names=['content-data.js','email-preview-styles.css','lp-module-markup.js','lp-shadow-styles.js','index.html','app.js','styles.css','preview.html','preview.js']
         actual=hashlib.sha256(json.dumps({n:(ROOT/n).read_text() for n in names},sort_keys=True,ensure_ascii=False).encode()).hexdigest()
         self.assertEqual(actual,manifest['buildDigest'])
         self.assertEqual({'email':38,'lp':34},manifest['moduleCounts'])

@@ -51,9 +51,11 @@ class ContentfulDesignLibrarySyncTest(unittest.TestCase):
         self.assertNotIn((LP/'runtime/contentful/lpbuilder-bridge.css').read_text().strip(),css)
         self.assertIn('Preview containment only',css)
         app=(ROOT/'app.js').read_text()
-        self.assertIn('host.attachShadow',app)
-        self.assertIn('data.lpStylesheets',app)
-        self.assertIn('window.matchMedia("(min-width: 669px)")',app)
+        self.assertIn("document.createElement('iframe')",app)
+        self.assertIn("'sandbox', 'allow-scripts'",app)
+        self.assertNotIn('host.attachShadow',app)
+        self.assertIn('data.lpStylesheets',(ROOT/'preview.js').read_text())
+        self.assertIn("data.layout[request.channel].referenceViewports[state.previewMode]",app)
         self.assertNotIn('tracking-script.js',app)
 
     def test_preview_module_copy_stays_outside_rendered_markup(self):

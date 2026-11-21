@@ -735,6 +735,52 @@ window.designLibraryData = {
       }
     ]
   },
+  "layout": {
+    "lp": {
+      "containerMaxWidth": 1200,
+      "paddingInline": [
+        {
+          "minWidth": 0,
+          "value": 16
+        },
+        {
+          "minWidth": 669,
+          "value": 24
+        },
+        {
+          "minWidth": 1014,
+          "value": 32
+        }
+      ],
+      "referenceViewports": {
+        "desktop": 1600,
+        "mobile": 392
+      },
+      "notes": [
+        "Contentful renderer geometry verified on 2026-11-21 with a neutral draft page. Width includes padding.",
+        "Reference viewports are design/test sizes, never fixed mobile content widths.",
+        "Full-bleed media may reach the viewport edges; content aligns to the renderer container."
+      ]
+    },
+    "email": {
+      "containerMaxWidth": 600,
+      "mobileMaxWidth": 620,
+      "paddingInline": {
+        "desktop": 40,
+        "mobile": 20
+      },
+      "columnGap": 20,
+      "referenceViewports": {
+        "desktop": 1150,
+        "mobile": 400
+      },
+      "notes": [
+        "Padding belongs to each module; do not add a second padded page wrapper.",
+        "Existing module-specific edge-to-edge media, column arrangements and intentional exceptions remain governed by their contracts.",
+        "Reference viewports do not replace responsive layout."
+      ]
+    }
+  },
   "lpStylesheets": [
     "https://www.static-immobilienscout24.de/fro/core/8.5.0/css/core.min.css",
     "https://www.static-immobilienscout24.de/fro/cosma-ui-icons/6.20.0/s24-icons.css",
@@ -745,6 +791,7 @@ window.designLibraryData = {
       "https://scout24-creative-ops.github.io/public/LP%20Builder%20%E2%80%93%20Contentful/lpbuilder-bridge/lpbuilder-bridge.css"
     ]
   },
+  "lpRuntime": "https://scout24-creative-ops.github.io/lp-builder/runtime/contentful/lpbuilder-runtime.js",
   "serviceProducts": [
     {
       "id": "ppa",

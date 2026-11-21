@@ -3,6 +3,7 @@ const data = window.designLibraryData;
 const state = {
   section: "email",
   item: "logo",
+  previewMode: window.matchMedia("(max-width: 668px)").matches ? "mobile" : "desktop",
 };
 
 
@@ -16,7 +17,7 @@ const layoutRoot = document.getElementById("ft-layout");
 
 const LP_BLEED_MODULES = new Set(["hero-bleed-flex", "hero-bleed-flex-centered"]);
 const LP_REMOTE_STYLESHEETS = data.lpStylesheets || [];
-const LP_DESKTOP_TYPOGRAPHY_QUERY = window.matchMedia("(min-width: 669px)");
+
 const EMAIL_HERO_SIDEBAR_ITEMS = new Set(["heros-left", "heros-center", "heros-fakeforms"]);
 const DEFAULT_ROUTE = { section: "email", item: "logo" };
 const EMAIL_BUTTONS_ITEM = { id: "buttons", label: "Buttons", kind: "emailButtons" };
@@ -26,6 +27,71 @@ const EMAIL_BUTTON_VARIANTS = [
   ["button-outline-strong", "Outline Strong"],
   ["button-outline-weak", "Outline Weak"],
 ];
+
+let previewSerial = 0;
+const previewObserver = typeof ResizeObserver === 'function' ? new ResizeObserver(entries => {
+  entries.forEach(entry => sizePreview(entry.target));
+}) : null;
+
+function renderPreviewToolbar(item) {
+  if (!['email', 'lp'].includes(state.section) && item.kind !== 'lpElements') return '';
+  const channel = state.section === 'email' ? 'email' : 'lp';
+  const sizes = data.layout[channel].referenceViewports;
+  return `<div class="ft-preview-toolbar" aria-label="Vorschaugröße">
+    ${['desktop', 'mobile'].map(mode => `<button type="button" data-preview-mode="${mode}"
+      aria-pressed="${state.previewMode === mode}">${mode === 'desktop' ? 'Desktop' : 'Mobil'} · ${sizes[mode]} px</button>`).join('')}
+    <span>Originalgröße im Vorschaufenster · passend verkleinert</span>
+  </div>`;
+}
+
+function bindPreviewToolbar() {
+  contentRoot.querySelectorAll('[data-preview-mode]').forEach(button => {
+    button.addEventListener('click', () => { state.previewMode = button.dataset.previewMode; render(); });
+  });
+}
+
+function sizePreview(host) {
+  const frame = host.querySelector('iframe');
+  if (!frame) return;
+  const width = Number(frame.dataset.viewportWidth);
+  const height = Number(frame.dataset.contentHeight || 240);
+  const scale = Math.min(1, host.clientWidth / width);
+  frame.style.transform = `scale(${scale})`;
+  frame.style.left = `${Math.max(0, (host.clientWidth - width * scale) / 2)}px`;
+  host.style.height = `${Math.ceil(height * scale)}px`;
+}
+
+function mountPreview(host, request) {
+  if (host.querySelector('iframe')) return;
+  const width = data.layout[request.channel].referenceViewports[state.previewMode];
+  const key = `preview-${++previewSerial}`;
+  const query = new URLSearchParams({...request, key});
+  const frame = document.createElement('iframe');
+  frame.src = `./preview.html?${query}`;
+  frame.title = `${request.module || request.element} · ${width} px`;
+  frame.setAttribute('sandbox', 'allow-scripts');
+  frame.dataset.previewKey = key;
+  frame.dataset.viewportWidth = String(width);
+  frame.style.width = `${width}px`;
+  frame.style.height = '240px';
+  host.innerHTML = '';
+  host.classList.add('ft-viewport-host');
+  host.appendChild(frame);
+  previewObserver?.observe(host);
+  sizePreview(host);
+}
+
+window.addEventListener('message', event => {
+  const message = event.data;
+  if (!message || message.type !== 'design-library-preview' || typeof message.key !== 'string') return;
+  const frame = Array.from(contentRoot.querySelectorAll('iframe[data-preview-key]'))
+    .find(frame => frame.contentWindow === event.source && frame.dataset.previewKey === message.key);
+  if (!frame || message.width !== Number(frame.dataset.viewportWidth) ||
+      !Number.isFinite(message.height) || message.height < 1 || message.height > 30000) return;
+  frame.dataset.contentHeight = String(message.height);
+  frame.style.height = `${message.height}px`;
+  sizePreview(frame.parentElement);
+});
 
 function escapeHtml(value) {
   return String(value)
@@ -684,6 +750,7 @@ function renderSectionContent(sectionKey, item) {
 }
 
 function renderSection() {
+  previewObserver?.disconnect();
   const currentSection = data.sections[state.section];
   const items = getSectionItems(state.section);
   const currentItem = items.find((item) => item.id === state.item) || items[0];
@@ -697,6 +764,7 @@ function renderSection() {
   renderSidebar(items, currentSection.label, state.section);
 
   contentRoot.innerHTML = `
+    ${renderPreviewToolbar(currentItem)}
     ${noteHtml}
 
     <section class="${sectionClass}">
@@ -704,10 +772,10 @@ function renderSection() {
     </section>
   `;
 
+  bindPreviewToolbar();
   bindCopyButtons();
   bindModuleCopyButtons();
   hydrateEmailPreviewScopes();
-  hydrateEmailServiceProducts();
   hydrateLpModulePreviews();
 }
 
@@ -762,259 +830,17 @@ function bindModuleCopyButtons() {
   });
 }
 
-function hydrateEmailServiceProducts() {
-  const host = contentRoot.querySelector("[data-email-service-products]");
-  if (!host) return;
-
-  host.innerHTML = data.serviceProducts
-    .map(
-      (product) => `
-        <article class="servicetiles-card">
-          <a class="servicetiles-card__link" href="${escapeHtml(product.targetUrl || "")}" target="_blank" rel="noopener noreferrer">
-            <div class="servicetiles-card__panel">
-              <div class="servicetiles-card__header">
-                <img class="servicetiles-card__icon" src="${escapeHtml(product.iconUrl || "")}" alt="" width="32" height="32" loading="lazy" />
-              </div>
-              <h3 class="servicetiles-card__title">${escapeHtml(product.title || "")}</h3>
-              <p class="module__body servicetiles-card__body">${escapeHtml(product.description || "")}</p>
-            </div>
-          </a>
-        </article>
-      `,
-    )
-    .join("");
-}
-
 function hydrateEmailPreviewScopes() {
-  contentRoot.querySelectorAll(".test-email-preview").forEach((host) => {
-    if (host.querySelector(":scope > .preview-shell")) return;
-
-    // Recreate the real preview shell so preview-styles.css owns the module typography inside the official library.
-    const shell = document.createElement("div");
-    shell.className = "preview-shell";
-
-    const canvas = document.createElement("main");
-    canvas.className = "preview-canvas";
-
-    while (host.firstChild) {
-      canvas.appendChild(host.firstChild);
-    }
-
-    shell.appendChild(canvas);
-    host.appendChild(shell);
-  });
-}
-
-function initLpCounterAnimated(root) {
-  const items = Array.from(
-    root.querySelectorAll('.counter-animated__item > [class^="font-heading-"], .counter-animated__item > [class*=" font-heading-"]'),
-  );
-
-  if (!items.length) return;
-
-  const startCount = (element) => {
-    const originalText = element.textContent.trim();
-    const match = originalText.match(/(\d+[.,]?\d*)/);
-    if (!match) return;
-
-    const numberPart = match[1];
-    const prefix = originalText.slice(0, match.index);
-    const suffix = originalText.slice(match.index + numberPart.length);
-    const hasComma = numberPart.includes(",");
-    const cleaned = numberPart.replace(/\./g, "").replace(",", ".");
-    const decimals = cleaned.includes(".") ? cleaned.split(".")[1].length : 0;
-    const target = Number.parseFloat(cleaned);
-    if (Number.isNaN(target)) return;
-
-    const duration = 1200;
-    let start = null;
-
-    const easeOut = (value) => value * (2 - value);
-
-    const step = (timestamp) => {
-      if (!start) start = timestamp;
-      const progress = Math.min((timestamp - start) / duration, 1);
-      const value = target * easeOut(progress);
-
-      let display = decimals > 0 ? value.toFixed(decimals) : Math.round(value).toString();
-      if (hasComma) display = display.replace(".", ",");
-
-      element.textContent = `${prefix}${display}${suffix}`;
-
-      if (progress < 1) {
-        window.requestAnimationFrame(step);
-      } else {
-        element.textContent = originalText;
-      }
-    };
-
-    window.requestAnimationFrame(step);
-  };
-
-  if (!("IntersectionObserver" in window)) {
-    items.forEach(startCount);
-    return;
-  }
-
-  const observer = new IntersectionObserver(
-    (entries, currentObserver) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          startCount(entry.target);
-          currentObserver.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.4 },
-  );
-
-  items.forEach((element) => observer.observe(element));
-}
-
-function initLpAccordion(root) {
-  root.querySelectorAll(".accordion__trigger").forEach((trigger) => {
-    const item = trigger.closest(".accordion__item");
-    const panel = item ? item.querySelector(".accordion__panel") : null;
-    if (!item || !panel || trigger.dataset.ftBound === "true") return;
-
-    trigger.dataset.ftBound = "true";
-    trigger.setAttribute("aria-expanded", "false");
-    panel.style.maxHeight = "0px";
-
-    trigger.addEventListener("click", () => {
-      const isOpen = item.classList.contains("is-open");
-
-      if (isOpen) {
-        item.classList.remove("is-open");
-        trigger.setAttribute("aria-expanded", "false");
-        panel.style.maxHeight = "0px";
-      } else {
-        item.classList.add("is-open");
-        trigger.setAttribute("aria-expanded", "true");
-        panel.style.maxHeight = `${panel.scrollHeight}px`;
-      }
-    });
-  });
-}
-
-function initLpVideo(root) {
-  if (root.dataset.ftVideoBound === "true") return;
-  root.dataset.ftVideoBound = "true";
-
-  root.addEventListener("click", (event) => {
-    const media = event.target.closest(".video--youtube .video-module__media");
-    if (!media) return;
-
-    const wrapper = media.closest(".video--youtube");
-    if (!wrapper || wrapper.classList.contains("is-playing")) return;
-
-    const player = wrapper.querySelector(".video-module__player");
-    const button = wrapper.querySelector(".video-module__play");
-    if (!player || !button) return;
-
-    const videoId =
-      button.getAttribute("data-video-id") ||
-      media.getAttribute("data-video-id") ||
-      wrapper.getAttribute("data-video-id");
-
-    if (!videoId) return;
-
-    player.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
-    player.hidden = false;
-    wrapper.classList.add("is-playing");
-  });
-}
-
-function getLpResponsiveSizeClass() {
-  return LP_DESKTOP_TYPOGRAPHY_QUERY.matches ? "sizes-desktop" : "sizes-palm";
-}
-
-function syncLpResponsiveSizeClasses() {
-  const activeClass = getLpResponsiveSizeClass();
-  const inactiveClass = activeClass === "sizes-desktop" ? "sizes-palm" : "sizes-desktop";
-
-  contentRoot.querySelectorAll(".ft-lp-shadow-host").forEach((host) => {
-    const frameRoot = host.shadowRoot?.querySelector(".frame-root");
-    if (!frameRoot) return;
-    frameRoot.classList.remove(inactiveClass);
-    frameRoot.classList.add(activeClass);
+  contentRoot.querySelectorAll('.test-email-preview').forEach(host => {
+    const name = host.dataset.emailPreviewModule || host.closest('[data-email-button]')?.dataset.emailButton;
+    if (name) mountPreview(host, {channel:'email', module:name});
   });
 }
 
 function hydrateLpModulePreviews() {
-  const markupMap = window.designLibraryLpModuleMarkup || {};
-  const elementMap = data.lpElements || {};
-
-  contentRoot.querySelectorAll(".ft-lp-shadow-host").forEach((host) => {
-    const moduleName = host.dataset.lpModule || "";
-    const elementId = host.dataset.lpElement || "";
-    const markup = moduleName ? markupMap[moduleName] :
-      host.dataset.lpButtonIndex !== undefined ? getLpElementVariants(elementId)[Number(host.dataset.lpButtonIndex)]?.markup : elementMap[elementId]?.markup;
-    if ((!moduleName && !elementId) || !markup) return;
-
-    const shadowRoot = host.shadowRoot || host.attachShadow({ mode: "open" });
-    if (host.dataset.lpRendered === "true") return;
-
-    shadowRoot.innerHTML = "";
-
-    const baseStyle = document.createElement("style");
-    baseStyle.textContent = `
-      :host {
-        display: block;
-        width: 100%;
-      }
-    `;
-    shadowRoot.appendChild(baseStyle);
-
-    [...LP_REMOTE_STYLESHEETS, ...(data.lpModuleStylesheets?.[moduleName] || [])].forEach((href) => {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = href;
-      shadowRoot.appendChild(link);
-    });
-
-    if (window.designLibraryLpShadowCss) {
-      const shadowCss = document.createElement("style");
-      // LP preview CSS uses :root custom properties in document previews; inside Shadow DOM they need to live on :host.
-      shadowCss.textContent = window.designLibraryLpShadowCss.replace(/:root\b/g, ":host");
-      shadowRoot.appendChild(shadowCss);
-    }
-
-    const wrapper = document.createElement("div");
-    wrapper.className = "ft-lp-shadow-scope";
-    wrapper.innerHTML = `<main class="frame-root ${getLpResponsiveSizeClass()}${elementId ? " frame-root--element" : ""}">${markup}</main>`;
-    shadowRoot.appendChild(wrapper);
-
-    if (moduleName === "accordion") addAccordionPreviewExamples(wrapper);
-    initLpAccordion(wrapper);
-    initLpCounterAnimated(wrapper);
-    initLpVideo(wrapper);
-
-    host.dataset.lpRendered = "true";
-  });
-}
-
-function addAccordionPreviewExamples(root) {
-  const accordion = root.querySelector(".accordion");
-  const original = accordion?.querySelector(".accordion__item");
-  if (!original || accordion.children.length >= 5) return;
-  const examples = [
-    ["Wo finde ich weitere Informationen?", "Über die verlinkten Inhalte gelangen Sie zu weiterführenden Informationen und passenden Services."],
-    ["An wen kann ich mich bei Fragen wenden?", "Nutzen Sie die auf der jeweiligen Seite angegebenen Kontaktmöglichkeiten für Ihr Anliegen."],
-  ];
-  examples.slice(0, 5 - accordion.children.length).forEach(([question, answer], offset) => {
-    const item = original.cloneNode(true);
-    const trigger = item.querySelector(".accordion__trigger");
-    const panel = item.querySelector(".accordion__panel");
-    const id = `library-accordion-extra-${offset + 1}`;
-    trigger.id = `${id}-trigger`;
-    trigger.setAttribute("aria-expanded", "false");
-    trigger.setAttribute("aria-controls", `${id}-panel`);
-    item.querySelector(".accordion__question").textContent = question;
-    panel.id = `${id}-panel`;
-    panel.setAttribute("aria-labelledby", trigger.id);
-    panel.querySelector("p").textContent = answer;
-    accordion.appendChild(item);
+  contentRoot.querySelectorAll('.ft-lp-shadow-host').forEach(host => {
+    mountPreview(host, {channel:'lp', module:host.dataset.lpModule || '',
+      element:host.dataset.lpElement || '', variant:host.dataset.lpButtonIndex || '0'});
   });
 }
 
@@ -1030,7 +856,7 @@ homeTrigger.addEventListener("click", (event) => {
   navigateTo(DEFAULT_ROUTE.section, DEFAULT_ROUTE.item);
 });
 
-LP_DESKTOP_TYPOGRAPHY_QUERY.addEventListener("change", syncLpResponsiveSizeClasses);
+
 
 window.addEventListener("hashchange", syncRouteFromHash);
 

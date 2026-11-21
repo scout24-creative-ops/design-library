@@ -2,6 +2,7 @@
 const {chromium} = require('playwright');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
+const {previewFrames,selectPreviewMode}=require('./browser_helpers.cjs');
 (async () => {
   const browser = await chromium.launch({headless: true,
     ...(process.env.CHROMIUM_EXECUTABLE_PATH ? {executablePath: process.env.CHROMIUM_EXECUTABLE_PATH} : {}),
@@ -19,9 +20,9 @@ const fs = require('node:fs');
         await page.goto('http://127.0.0.1:8765/#' + route, {waitUntil:'domcontentloaded'});
         await page.locator(`[data-sidebar-item="${route.split('/')[1]}"].is-active`).waitFor();
         await page.locator('#ft-content > section').waitFor();
-        await page.waitForFunction(() => [...document.querySelectorAll('.ft-lp-shadow-host')].every(
-          host => host.shadowRoot && [...host.shadowRoot.querySelectorAll('link')].every(link => link.sheet)));
-        await page.evaluate(() => document.fonts.ready);
+        await selectPreviewMode(page, width);
+        const frames=await previewFrames(page);
+        const preview=frames[0];
         // Hash navigation changes color through a short CSS transition.
         await page.waitForFunction(() => {
           const active=document.querySelector('[data-main-nav][aria-current="page"]');
@@ -49,21 +50,21 @@ const fs = require('node:fs');
           for (const removed of ['colors','svg','text-lists']) assert.ok(!sidebar.includes(removed));
         }
         if (route === 'lp/benefits') {
-          assert.equal(await page.locator('.lpb-icon--48').count(),7);
-          const icons=await page.locator('.lpb-icon--48').evaluateAll(icons=>icons.map(icon=>({
+          assert.equal((await Promise.all(frames.map(frame=>frame.locator('.lpb-icon--48').count()))).reduce((a,b)=>a+b,0),7);
+          const icons=(await Promise.all(frames.map(frame=>frame.locator('.lpb-icon--48').evaluateAll(icons=>icons.map(icon=>({
             content:getComputedStyle(icon,'::before').content,
             family:getComputedStyle(icon,'::before').fontFamily,
             size:getComputedStyle(icon).fontSize,
             width:icon.getBoundingClientRect().width,
             height:icon.getBoundingClientRect().height,
-          })));
+          })))))).flat();
           assert.ok(icons.every(icon=>icon.content !== 'none' && icon.content !== 'normal' && icon.size==='48px' && icon.width>=47 && icon.height>=47),JSON.stringify(icons));
-          const fonts=await page.evaluate(()=>[...document.fonts].map(font=>({family:font.family,status:font.status})));
+          const fonts=await preview.evaluate(()=>[...document.fonts].map(font=>({family:font.family,status:font.status})));
           assert.ok(fonts.some(font=>/s24/i.test(font.family) && font.status==='loaded'),JSON.stringify(fonts));
           diagnostics.push({route,width,icons,fonts});
         }
         if (route === 'lp/accordion') {
-          const triggers=page.locator('.accordion__trigger');
+          const triggers=preview.locator('.accordion__trigger');
           assert.equal(await triggers.count(),5);
           for (const trigger of await triggers.all()) {
             await trigger.click();
@@ -77,16 +78,16 @@ const fs = require('node:fs');
           }
         }
         if (route === 'lp/tables') {
-          const styles=await page.locator('.lpb-product-comparison__plan-identities').evaluate(el=>getComputedStyle(el).display);
+          const styles=await preview.locator('.lpb-product-comparison__plan-identities').evaluate(el=>getComputedStyle(el).display);
           assert.equal(styles,'grid');
-          assert.equal(await page.locator('.lpb-product-comparison__table').first().evaluate(el=>getComputedStyle(el).borderCollapse),'collapse');
-          const summary=page.locator('.lpb-product-comparison__group-summary').last();
+          assert.equal(await preview.locator('.lpb-product-comparison__table').first().evaluate(el=>getComputedStyle(el).borderCollapse),'collapse');
+          const summary=preview.locator('.lpb-product-comparison__group-summary').last();
           await summary.click();
           assert.equal(await summary.evaluate(el=>el.parentElement.open),true);
-          if (width===390) assert.equal(await page.locator('.lpb-product-comparison__scroller').evaluate(el=>el.scrollWidth>el.clientWidth),true);
+          if (width===390) assert.equal(await preview.locator('.lpb-product-comparison__scroller').evaluate(el=>el.scrollWidth>el.clientWidth),true);
         }
         if (route === 'lp/sticky-footer') {
-          const footer=page.locator('.lpb-sticky-footer');
+          const footer=preview.locator('.lpb-sticky-footer');
           assert.equal(await footer.isVisible(),true);
           const position=await footer.evaluate(el=>({position:getComputedStyle(el).position,transform:getComputedStyle(el).transform}));
           assert.deepEqual(position,{position:'relative',transform:'none'});

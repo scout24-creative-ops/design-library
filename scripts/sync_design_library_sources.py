@@ -49,12 +49,13 @@ def generate(email_dir, lp_dir, email_only=False, design_system_dir=DEFAULT_DESI
             'label': 'Foundations', 'items': [{'id': key, 'label': label, 'kind': 'tokens'} for key, label in [
                 ('colors', 'Colors'), ('typography', 'Typography'), ('spacing', 'Spacing'),
                 ('radius', 'Border Radius'), ('borders', 'Borders'), ('ratios', 'Image Ratios')]] + lp.FOUNDATION_PAGE_SPECS}},
-            'lpElements': lp.build_lp_element_data(), 'tokens': token_snapshot}
+            'lpElements': lp.build_lp_element_data(), 'tokens': token_snapshot, 'layout': tokens['layout']}
         markup = lp.extract_module_markup(lp.SELECTED_LP_MODULE_IDS)
         outputs['lp-module-markup.js'] = lp.render_markup_assignment(markup)
         outputs['lp-shadow-styles.js'] = lp.render_shadow_assignment(lp.build_lp_shadow_styles())
         data['lpStylesheets'] = lp.PUBLIC_STYLESHEETS
         data['lpModuleStylesheets'] = lp.MODULE_STYLESHEETS
+        data['lpRuntime'] = 'https://scout24-creative-ops.github.io/lp-builder/runtime/contentful/lpbuilder-runtime.js'
     data['serviceProducts'] = email.build_service_products()
     outputs['content-data.js'] = HEADER + MARKER + json.dumps(data, ensure_ascii=False, indent=2) + ';\n'
     outputs['email-preview-styles.css'] = (email_dir / 'modules/preview.css').read_text()
@@ -65,7 +66,7 @@ def render_manifest(outputs=None):
     # Hash the deployed snapshot only; no private paths or credentials in public output.
     outputs = outputs or {}
     names = ['content-data.js', 'email-preview-styles.css', 'lp-module-markup.js',
-             'lp-shadow-styles.js', 'index.html', 'app.js', 'styles.css']
+             'lp-shadow-styles.js', 'index.html', 'app.js', 'styles.css', 'preview.html', 'preview.js']
     snapshot = {name: outputs[name] if name in outputs else (OUTPUT / name).read_text()
                 for name in names}
     data = json.loads(snapshot['content-data.js'].split(MARKER, 1)[1].strip().removesuffix(';'))
