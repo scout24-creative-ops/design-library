@@ -1,4 +1,4 @@
-"""Read current canonical LP markup; keep production CSS on its existing public URL."""
+"""Read current canonical LP markup; link the reviewed, versioned production CSS release."""
 from pathlib import Path
 import json
 import hashlib
@@ -8,10 +8,11 @@ LP_DIR=Path()
 TOKENS_PATH=Path()
 MARKUP_MARKER='window.designLibraryLpModuleMarkup = '
 CSS_MARKER='window.designLibraryLpShadowCss = '
+PUBLIC_BRIDGE_PATH='releases/contentful/layout-v1/lpbuilder-bridge.css'
 PUBLIC_STYLESHEETS=[
     'https://www.static-immobilienscout24.de/fro/core/8.5.0/css/core.min.css',
     'https://www.static-immobilienscout24.de/fro/cosma-ui-icons/6.20.0/s24-icons.css',
-    'https://scout24-creative-ops.github.io/lp-builder/runtime/contentful/lpbuilder-bridge.css',
+    'https://scout24-creative-ops.github.io/lp-builder/'+PUBLIC_BRIDGE_PATH,
 ]
 # The comparison module has its own already-published bridge. Keep both public
 # deliveries intact; load this dependency only in that module's isolated preview.
@@ -72,6 +73,12 @@ def load_module_metadata():
     entry=next(x for x in lock['files'] if x['path']=='runtime/contentful/lpbuilder-bridge.css')
     if hashlib.sha256((LP_DIR/entry['path']).read_bytes()).hexdigest()!=entry['sha256']:
         raise ValueError('Public bridge does not match current runtime lock')
+    manifest=json.loads((LP_DIR/Path(PUBLIC_BRIDGE_PATH).parent/'manifest.json').read_text())
+    release=(LP_DIR/PUBLIC_BRIDGE_PATH).read_bytes()
+    if manifest['stylesheet']!=PUBLIC_BRIDGE_PATH or len(release)!=manifest['bytes'] or hashlib.sha256(release).hexdigest()!=manifest['sha256']:
+        raise ValueError('Versioned public bridge does not match its release manifest')
+    if manifest['base']['path']!=entry['path'] or manifest['base']['sha256']!=entry['sha256']:
+        raise ValueError('Layout release does not preserve the protected bridge baseline')
     return [{'id':m,'source':'lp-builder/modules/component-library.html'} for m in SELECTED_LP_MODULE_IDS]
 
 

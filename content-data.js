@@ -784,7 +784,7 @@ window.designLibraryData = {
   "lpStylesheets": [
     "https://www.static-immobilienscout24.de/fro/core/8.5.0/css/core.min.css",
     "https://www.static-immobilienscout24.de/fro/cosma-ui-icons/6.20.0/s24-icons.css",
-    "https://scout24-creative-ops.github.io/lp-builder/runtime/contentful/lpbuilder-bridge.css"
+    "https://scout24-creative-ops.github.io/lp-builder/releases/contentful/layout-v1/lpbuilder-bridge.css"
   ],
   "lpModuleStylesheets": {
     "product-comparison-table": [

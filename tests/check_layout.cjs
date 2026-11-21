@@ -34,6 +34,17 @@ let browser;
         if(channel==='lp') {
           const gutter=layout.paddingInline.filter(step=>width>=step.minWidth).at(-1).value;
           assert.equal(result.paddingLeft,gutter); assert.equal(result.paddingRight,gutter);
+          if (name==='hero-split' || name==='hero-bleed-flex') {
+            const edges=await page.locator('#preview-root').evaluate(root=>{
+              const box=root.getBoundingClientRect(),style=getComputedStyle(root);
+              const hero=root.querySelector('.lpb-hero--split .lpb-hero__inner,.lpb-hero--bleed:not(.lpb-hero--centered) .lpb-hero__content');
+              const rect=hero.getBoundingClientRect(),heroStyle=getComputedStyle(hero);
+              return {expectedLeft:box.left+parseFloat(style.paddingLeft),expectedRight:box.right-parseFloat(style.paddingRight),
+                left:rect.left+parseFloat(heroStyle.paddingLeft),right:rect.right-parseFloat(heroStyle.paddingRight)};
+            });
+            assert.ok(Math.abs(edges.left-edges.expectedLeft)<0.1,JSON.stringify({name,mode,edges}));
+            assert.ok(Math.abs(edges.right-edges.expectedRight)<0.1,JSON.stringify({name,mode,edges}));
+          }
         } else {
           assert.ok(result.inner, name);
           const gutter=layout.paddingInline[mode];
