@@ -1573,9 +1573,20 @@ body {
   width: 100%;
 }
 
-.ft-lp-element-card .module-copy {
+.ft-lp-elements .ft-lp-element-card .module-copy,
+.ft-email-buttons .ft-lp-element-card .module-copy {
   top: 0;
   right: 0;
+}
+
+.ft-email-buttons {
+  max-width: var(--module-width-current);
+  margin: 0 auto;
+}
+
+.ft-email-button-preview {
+  display: flex;
+  justify-content: flex-start;
 }
 
 .ft-lp-element-card .test-module-frame {

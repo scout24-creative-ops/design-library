@@ -22,6 +22,15 @@ Die Originalmodule bleiben in `email-builder` und `lp-builder`. Die gemeinsamen
 Design-Tokens bleiben in `design-system`. Das Repo kopiert weder Builder-Quellen
 noch den gemeinsamen Token-Quellbestand in eine zweite gepflegte Bibliothek.
 
+## Button-Vorschauen
+
+Unter E-Mail-Module zeigt die UI-Kategorie **Buttons** die vier vorhandenen
+Button-Klassen aus `email-preview-styles.css`. Unter LP-Module / **Buttons & Links**
+werden die einzelnen Buttons unverändert aus dem kanonischen Komponentenblock
+abgeleitet. Jede Variante steht in einer eigenen Zeile mit eigenem Copy-Symbol;
+es kopiert ausschließlich das HTML dieser Variante. Diese Komponentenansicht
+ändert weder den Modulbestand noch installierte Builder oder E-Mail-Snippets.
+
 ## Farben für Kolleg:innen
 
 Die Farbübersicht zeigt getrennte LP- und E-Mail-Akzentfarben sowie einmalig die
@@ -71,6 +80,9 @@ werden ausdrücklich übersprungen. Ein solcher Lauf belegt keine vollständige
 Regenerierung. Die CI benötigt dafür weder private Quellen noch Zugangsdaten.
 Die vorhandene Browserprüfung `node tests/check_browser.cjs` ist optional und
 benötigt Playwright/Chromium sowie den lokalen Server; sie wartet auf externe LP-Styles.
+`node tests/check_buttons.cjs` prüft die Button-Kategorien bei 1440 und 390 Pixeln,
+ihre vertikale Anordnung und jeden Copy-Inhalt. Optional lässt sich über
+`CHROMIUM_EXECUTABLE_PATH` ein vorhandenes Chromium verwenden.
 
 ## Bestehende Systeme
 
