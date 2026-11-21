@@ -472,24 +472,25 @@ window.designLibraryData = {
   },
   "tokens": {
     "colors": {
+      "usage": "LP und E-Mail haben eigene Akzentfarben. Neutrale Farben gelten für beide Builder. Welche Farben du für Hintergründe, Buttons oder Texte verwenden kannst, legt das jeweilige Modul fest.",
       "groups": [
         {
-          "title": "Accent Colors",
+          "title": "LP-Akzentfarben",
           "items": [
             {
               "name": "Teal",
               "value": "#3DF5DC"
             },
             {
-              "name": "Yellow",
+              "name": "Gelb",
               "value": "#EFF933"
             },
             {
-              "name": "Blue",
+              "name": "Blau",
               "value": "#24E3FF"
             },
             {
-              "name": "Purple",
+              "name": "Lila",
               "value": "#D5AAFF"
             },
             {
@@ -499,14 +500,35 @@ window.designLibraryData = {
           ]
         },
         {
-          "title": "Neutrals",
+          "title": "E-Mail-Akzentfarben",
+          "items": [
+            {
+              "name": "Teal",
+              "value": "#74FFDF"
+            },
+            {
+              "name": "Gelb",
+              "value": "#F5F200"
+            },
+            {
+              "name": "Blau",
+              "value": "#00DFFF"
+            },
+            {
+              "name": "Orange",
+              "value": "#FF9015"
+            }
+          ]
+        },
+        {
+          "title": "Neutrale Farben · LP & E-Mail",
           "items": [
             {
               "name": "Charcoal",
               "value": "#333333"
             },
             {
-              "name": "White",
+              "name": "Weiß",
               "value": "#FFFFFF"
             },
             {
@@ -514,127 +536,28 @@ window.designLibraryData = {
               "value": "#FBF8F6"
             },
             {
-              "name": "Grey 1",
+              "name": "Grau 1",
               "value": "#F5F5F5"
             },
             {
-              "name": "Grey 2",
+              "name": "Grau 2",
               "value": "#EAEAEA"
             },
             {
-              "name": "Grey 3",
+              "name": "Grau 3",
               "value": "#E0E0E0"
             },
             {
-              "name": "Grey 4",
+              "name": "Grau 4",
               "value": "#C4C4C4"
             },
             {
-              "name": "Grey 5",
+              "name": "Grau 5",
               "value": "#ADADAD"
             },
             {
-              "name": "Grey 6",
+              "name": "Grau 6",
               "value": "#676767"
-            }
-          ]
-        },
-        {
-          "title": "Semantic LP Colors",
-          "items": [
-            {
-              "name": "hoverTeal",
-              "value": "#55E6CB"
-            },
-            {
-              "name": "hoverCharcoal",
-              "value": "#484848"
-            },
-            {
-              "name": "hoverSand",
-              "value": "#FBF8F6"
-            },
-            {
-              "name": "hoverSoft",
-              "value": "#E8E5E3"
-            },
-            {
-              "name": "borderSoft",
-              "value": "#E0E0E0"
-            },
-            {
-              "name": "borderWeak",
-              "value": "#BDBBB9"
-            },
-            {
-              "name": "textMuted",
-              "value": "#6A6A69"
-            },
-            {
-              "name": "mediaPlaceholder",
-              "value": "#EAEAEA"
-            }
-          ]
-        },
-        {
-          "title": "E-Mail-Farben",
-          "items": [
-            {
-              "name": "teal",
-              "value": "#74FFDF"
-            },
-            {
-              "name": "yellow",
-              "value": "#F5F200"
-            },
-            {
-              "name": "blue",
-              "value": "#00DFFF"
-            },
-            {
-              "name": "red",
-              "value": "#FF9015"
-            }
-          ]
-        },
-        {
-          "title": "Semantische E-Mail-Farben",
-          "items": [
-            {
-              "name": "textPrimary",
-              "value": "#333333"
-            },
-            {
-              "name": "textSecondary",
-              "value": "#676767"
-            },
-            {
-              "name": "textMuted",
-              "value": "#ADADAD"
-            },
-            {
-              "name": "textPlaceholder",
-              "value": "#676767"
-            },
-            {
-              "name": "surfaceGray",
-              "value": "#F5F5F5"
-            },
-            {
-              "name": "borderSoft",
-              "value": "#EAEAEA"
-            },
-            {
-              "name": "borderStrong",
-              "value": "#C4C4C4"
-            },
-            {
-              "name": "borderSubtle",
-              "value": "#E0E0E0"
-            },
-            {
-              "name": "tableDivider",
-              "value": "#E0E0E0"
             }
           ]
         }

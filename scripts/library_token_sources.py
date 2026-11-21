@@ -3,43 +3,50 @@ from typing import Any
 def build_tokens_snapshot(canonical_tokens: dict[str, Any]) -> dict[str, Any]:
     shared_palette = canonical_tokens["colors"]["palette"]["shared"]
     lp_palette = canonical_tokens["colors"]["palette"]["lp"]
-    lp_semantic = canonical_tokens["colors"]["semantic"]["lp"]
+    email_palette = canonical_tokens["colors"]["palette"]["email"]
     typography = canonical_tokens["typography"]
 
+    # Colleague-facing palette, not a catalogue of technical role aliases.
+    # Values always come from the canonical source; usage stays module-specific.
     colors = {
+        "usage": (
+            "LP und E-Mail haben eigene Akzentfarben. Neutrale Farben gelten für "
+            "beide Builder. Welche Farben du für Hintergründe, Buttons oder Texte "
+            "verwenden kannst, legt das jeweilige Modul fest."
+        ),
         "groups": [
             {
-                "title": "Accent Colors",
+                "title": "LP-Akzentfarben",
                 "items": [
-                    {"name": "Teal", "value": lp_palette["teal"]},
-                    {"name": "Yellow", "value": lp_palette["yellow"]},
-                    {"name": "Blue", "value": lp_palette["blue"]},
-                    {"name": "Purple", "value": lp_palette["purple"]},
-                    {"name": "Orange", "value": lp_palette["orange"]},
+                    {"name": label, "value": lp_palette[name]}
+                    for name, label in [
+                        ("teal", "Teal"), ("yellow", "Gelb"), ("blue", "Blau"),
+                        ("purple", "Lila"), ("orange", "Orange"),
+                    ]
                 ],
             },
             {
-                "title": "Neutrals",
+                "title": "E-Mail-Akzentfarben",
                 "items": [
-                    {"name": "Charcoal", "value": shared_palette["charcoal"]},
-                    {"name": "White", "value": shared_palette["white"]},
-                    {"name": "Sand", "value": shared_palette["sand"]},
-                    {"name": "Grey 1", "value": shared_palette["grey1"]},
-                    {"name": "Grey 2", "value": shared_palette["grey2"]},
-                    {"name": "Grey 3", "value": shared_palette["grey3"]},
-                    {"name": "Grey 4", "value": shared_palette["grey4"]},
-                    {"name": "Grey 5", "value": shared_palette["grey5"]},
-                    {"name": "Grey 6", "value": shared_palette["grey6"]},
+                    {"name": label, "value": email_palette[name]}
+                    for name, label in [
+                        ("teal", "Teal"), ("yellow", "Gelb"), ("blue", "Blau"),
+                        ("red", "Orange"),
+                    ]
                 ],
             },
             {
-                "title": "Semantic LP Colors",
+                "title": "Neutrale Farben · LP & E-Mail",
                 "items": [
-                    {"name": name, "value": value}
-                    for name, value in lp_semantic.items()
+                    {"name": label, "value": shared_palette[name]}
+                    for name, label in [
+                        ("charcoal", "Charcoal"), ("white", "Weiß"), ("sand", "Sand"),
+                        ("grey1", "Grau 1"), ("grey2", "Grau 2"), ("grey3", "Grau 3"),
+                        ("grey4", "Grau 4"), ("grey5", "Grau 5"), ("grey6", "Grau 6"),
+                    ]
                 ],
             },
-        ]
+        ],
     }
 
     heading_labels = {
