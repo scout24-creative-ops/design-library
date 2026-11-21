@@ -25,6 +25,7 @@ def generate(email_dir, lp_dir, email_only=False, design_system_dir=DEFAULT_DESI
     email.configure_source(email_dir)
     modules = email.build_email_modules_map()
     navigation = json.loads((ROOT / 'library-data/email-navigation.json').read_text())
+    navigation['label'] = 'E-Mail'
     for item in navigation['items']:
         builder = email.build_service_products_library_html if item['kind'] == 'serviceProducts' else email.build_email_library_html
         item['libraryHtml'] = builder(item, modules)
@@ -41,18 +42,19 @@ def generate(email_dir, lp_dir, email_only=False, design_system_dir=DEFAULT_DESI
     else:
         lp.configure_source(lp_dir, tokens_path)
         lp_section = lp.build_lp_content_section(lp.load_module_metadata())
-        lp_section['label'] = 'LP-Module'
+        lp_section['label'] = 'Landing Page'
         tokens = json.loads((tokens_path).read_text())
         token_snapshot = build_tokens_snapshot(tokens)
         data = {'sections': {'email': navigation, 'lp': lp_section, 'tokens': {
-            'label': 'Design-Tokens', 'items': [{'id': key, 'label': label, 'kind': 'tokens'} for key, label in [
+            'label': 'Foundations', 'items': [{'id': key, 'label': label, 'kind': 'tokens'} for key, label in [
                 ('colors', 'Colors'), ('typography', 'Typography'), ('spacing', 'Spacing'),
-                ('radius', 'Border Radius'), ('borders', 'Borders'), ('ratios', 'Image Ratios')]]}},
+                ('radius', 'Border Radius'), ('borders', 'Borders'), ('ratios', 'Image Ratios')]] + lp.FOUNDATION_PAGE_SPECS}},
             'lpElements': lp.build_lp_element_data(), 'tokens': token_snapshot}
         markup = lp.extract_module_markup(lp.SELECTED_LP_MODULE_IDS)
         outputs['lp-module-markup.js'] = lp.render_markup_assignment(markup)
         outputs['lp-shadow-styles.js'] = lp.render_shadow_assignment(lp.build_lp_shadow_styles())
         data['lpStylesheets'] = lp.PUBLIC_STYLESHEETS
+        data['lpModuleStylesheets'] = lp.MODULE_STYLESHEETS
     data['serviceProducts'] = email.build_service_products()
     outputs['content-data.js'] = HEADER + MARKER + json.dumps(data, ensure_ascii=False, indent=2) + ';\n'
     outputs['email-preview-styles.css'] = (email_dir / 'modules/preview.css').read_text()

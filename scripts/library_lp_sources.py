@@ -10,8 +10,24 @@ MARKUP_MARKER='window.designLibraryLpModuleMarkup = '
 CSS_MARKER='window.designLibraryLpShadowCss = '
 PUBLIC_STYLESHEETS=[
     'https://www.static-immobilienscout24.de/fro/core/8.5.0/css/core.min.css',
+    'https://www.static-immobilienscout24.de/fro/cosma-ui-icons/6.20.0/s24-icons.css',
     'https://scout24-creative-ops.github.io/lp-builder/runtime/contentful/lpbuilder-bridge.css',
 ]
+# The comparison module has its own already-published bridge. Keep both public
+# deliveries intact; load this dependency only in that module's isolated preview.
+MODULE_STYLESHEETS={
+    'product-comparison-table': [
+        'https://scout24-creative-ops.github.io/public/LP%20Builder%20%E2%80%93%20Contentful/lpbuilder-bridge/lpbuilder-bridge.css',
+    ],
+}
+FOUNDATION_PAGE_SPECS=[
+    {'id':'text-lists','label':'Text & Lists','kind':'lpElements','modules':[], 'elementGroups':[
+        {'label':'Text','layout':'stack','elements':['headline-variants','text-variants','text-links']},
+        {'label':'Lists','layout':'stack','elements':['list-plain','list-ordered','list-nested','list-bullet','checkmark-list']}]},
+]
+# These duplicate categories were explicitly removed from the Library. The
+# canonical Builder components remain untouched and are checked below.
+OMITTED_LP_ELEMENT_IDS={'colors','surfaces','static-inline-svg-diagram'}
 LP_PAGE_SPECS=[
     {'id':'heros','label':'Heros','modules':['hero-bleed-flex','hero-bleed-flex-centered','hero-split']},
     {'id':'teaser','label':'Teaser','modules':['teaser-2col','teaser-3col','teaser-4col','teaser-split-image-right','teaser-split-image-left','teaser-split-colour-image-right','teaser-split-colour-image-left','pricing-list','choice-card-list','choice-card-expand-list','content-cards-2col','content-cards-3col','card-carousel']},
@@ -28,18 +44,11 @@ LP_PAGE_SPECS=[
     {'id':'handbook','label':'Handbook','modules':['handbook-category-card','handbook-step-media']},
     {'id':'diagrams','label':'Diagramme','modules':['static-inline-svg-diagram-section']},
     {'id':'sticky-footer','label':'Sticky Footer','modules':['lp-sticky-footer']},
-    {'id':'text-lists','label':'Text & Lists','modules':[], 'elementGroups':[
-        {'label':'Text','layout':'stack','elements':['headline-variants','text-variants','text-links']},
-        {'label':'Lists','layout':'stack','elements':['list-plain','list-ordered','list-nested','list-bullet','checkmark-list']}]},
     {'id':'buttons-links','label':'Buttons & Links','modules':[], 'elementGroups':[
         {'label':'Buttons & Links','layout':'stack','elements':['buttons','chevron-link']}]},
-    {'id':'colors','label':'Colors & Surfaces','modules':[], 'elementGroups':[
-        {'label':'Farben und Flächen','layout':'stack','elements':['colors','surfaces']}]},
-    {'id':'svg','label':'SVG-Komponente','modules':[], 'elementGroups':[
-        {'label':'Statisches SVG','layout':'stack','elements':['static-inline-svg-diagram']}]},
 ]
 SELECTED_LP_MODULE_IDS=[m for p in LP_PAGE_SPECS for m in p['modules']]
-SELECTED_LP_ELEMENT_IDS=[e for p in LP_PAGE_SPECS for g in p.get('elementGroups',[]) for e in g['elements']]
+SELECTED_LP_ELEMENT_IDS=[e for p in LP_PAGE_SPECS+FOUNDATION_PAGE_SPECS for g in p.get('elementGroups',[]) for e in g['elements']]
 
 
 def configure_source(lp_dir,tokens_path):
@@ -72,12 +81,13 @@ def build_lp_content_section(metadata):
     for p in LP_PAGE_SPECS:
         item={**p,'kind':'lpElements' if p.get('elementGroups') else 'lpModules'}
         items.append(item)
-    return {'label':'LP-Module','items':items}
+    return {'label':'Landing Page','items':items}
 
 
 def build_lp_element_data():
     available=blocks('COMPONENT')
-    if set(SELECTED_LP_ELEMENT_IDS)!=set(available):raise ValueError('Component navigation mismatch')
+    if set(SELECTED_LP_ELEMENT_IDS) & OMITTED_LP_ELEMENT_IDS or set(SELECTED_LP_ELEMENT_IDS) | OMITTED_LP_ELEMENT_IDS != set(available):
+        raise ValueError('Component navigation mismatch')
     return {key:{'markup':available[key],'copyPayload':available[key],'copyLabel':key} for key in SELECTED_LP_ELEMENT_IDS}
 
 
@@ -106,6 +116,9 @@ def build_lp_shadow_styles():
 .frame-root .lpb-hero{width:100%!important;margin-left:0!important;margin-right:0!important;}
 .frame-root .lpb-hero--bleed:not(.lpb-hero--centered) .lpb-hero__content{max-width:var(--module-content-max);}
 .frame-root img[src=""]{visibility:hidden;}
+/* Keep the scroll-triggered footer visible inside its catalogue frame. */
+.frame-root .lpb-sticky-footer{position:relative!important;inset:auto!important;transform:none!important;transition:none!important;z-index:0!important;}
+.frame-root .lpb-sticky-footer::before{width:100%!important;}
 @media(max-width:740px){.frame-root:not(.frame-root--element)>*{width:min(100%,var(--module-content-max-mobile));}}
 '''
 

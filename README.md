@@ -1,6 +1,6 @@
 # Design Library
 
-E-Mail-Module, LP-Module und Design-Tokens:
+E-Mail, Landing Page und Foundations:
 https://scout24-creative-ops.github.io/design-library/
 
 Dieses Repository enthält die Oberfläche, ihre Generatoren und Prüfungen sowie
@@ -24,12 +24,33 @@ noch den gemeinsamen Token-Quellbestand in eine zweite gepflegte Bibliothek.
 
 ## Button-Vorschauen
 
-Unter E-Mail-Module zeigt die UI-Kategorie **Buttons** die vier vorhandenen
-Button-Klassen aus `email-preview-styles.css`. Unter LP-Module / **Buttons & Links**
+Unter E-Mail zeigt die UI-Kategorie **Buttons** die vier vorhandenen
+Button-Klassen aus `email-preview-styles.css`. Unter Landing Page / **Buttons & Links**
 werden die einzelnen Buttons unverändert aus dem kanonischen Komponentenblock
 abgeleitet. Jede Variante steht in einer eigenen Zeile mit eigenem Copy-Symbol;
 es kopiert ausschließlich das HTML dieser Variante. Diese Komponentenansicht
 ändert weder den Modulbestand noch installierte Builder oder E-Mail-Snippets.
+
+## Navigation und Vorschauen
+
+**Foundations** sammelt gemeinsame Gestaltungswerte und **Text & Lists**.
+Die doppelten LP-Kategorien **Colors & Surfaces** und **SVG-Komponente** sind
+entfernt; Farben stehen unter Foundations, Diagramme bleiben unter Landing Page.
+Alte Deep Links zu den verschobenen/entfernten Kategorien führen zum passenden
+aktuellen Bereich. Die internen `tokens`-Adressen bleiben kompatibel.
+
+Aktive Hauptnavigation: Charcoal und fett; inaktive Einträge: Grau und normal.
+Copy-Symbole stehen im Layout direkt oberhalb ihrer Vorschau, bei kleinen
+Elementen linksbündig, bei ganzen Modulen am rechten Rand des Vorschau-Rahmens.
+Sie überlagern das Modul nicht und gehören nicht zu seinem kopierten Inhalt.
+
+Die COSMA-Icon-Schrift wird im Dokument und in den isolierten LP-Vorschauen
+geladen. Die Produkttabelle nutzt zusätzlich ihre bestehende öffentliche
+Stylesheet-Abhängigkeit aus `public/LP Builder – Contentful/lpbuilder-bridge/`;
+es gibt keine lokale Kopie dieses Stylesheets und keine Änderung der Auslieferung.
+Der Sticky Footer bleibt nur innerhalb der Vorschau statisch sichtbar.
+Zwei zusätzliche Accordion-Beispiele ergänzen die drei kanonischen Paare in der
+Browser-Vorschau zu fünf Einträgen; das extrahierte Original bleibt unverändert.
 
 ## Farben für Kolleg:innen
 
@@ -83,6 +104,10 @@ benötigt Playwright/Chromium sowie den lokalen Server; sie wartet auf externe L
 `node tests/check_buttons.cjs` prüft die Button-Kategorien bei 1440 und 390 Pixeln,
 ihre vertikale Anordnung und jeden Copy-Inhalt. Optional lässt sich über
 `CHROMIUM_EXECUTABLE_PATH` ein vorhandenes Chromium verwenden.
+`node tests/check_optimizations.cjs` prüft aktive Navigation, Copy-Abstände,
+geladene 48px-Icons, alle fünf Accordion-Paare, Tabellen, Footer und Foundations
+bei beiden Breiten. Die CI führt beide Browserprüfungen aus und stellt Screenshots
+und Diagnosen für 14 Tage als Workflow-Artefakt bereit.
 
 ## Bestehende Systeme
 

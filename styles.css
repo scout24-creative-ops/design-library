@@ -89,7 +89,7 @@ body {
   border: 0;
   background: transparent;
   padding: 8px 0;
-  color: var(--text);
+  color: var(--text-soft);
   cursor: pointer;
   font: inherit;
   font-size: var(--font-size-nav);
@@ -101,11 +101,16 @@ body {
 .ft-topnav__link:hover,
 .ft-topnav__link:focus-visible {
   color: var(--text);
-  outline: none;
+}
+
+.ft-topnav__link:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 4px;
 }
 
 .ft-topnav__link.is-active {
-  color: var(--accent);
+  color: var(--text);
+  font-weight: 700;
 }
 
 .ft-layout {
@@ -1470,14 +1475,17 @@ body {
 .ft-lp-library .test-module-row {
   position: relative;
   width: 100%;
+  display: grid;
+  gap: 12px;
+}
+
+.ft-email-library .test-module-row {
+  max-width: var(--module-width-current);
+  margin-inline: auto;
 }
 
 .ft-email-library [id^="email-heros"] .test-module-row + .test-module-row {
   margin-top: 50px;
-}
-
-.ft-email-library #email-heros-center .test-module-row:has(.module-copy[data-module="hero-image-head-copy-bleed-center"]) .test-module-frame {
-  padding-top: 60px;
 }
 
 .ft-email-library #email-heros-left,
@@ -1561,7 +1569,8 @@ body {
 .ft-lp-element-card {
   position: relative;
   min-width: 0;
-  padding-top: 56px;
+  display: grid;
+  gap: 12px;
 }
 
 .ft-lp-element-grid--inline .ft-lp-element-card {
@@ -1575,8 +1584,7 @@ body {
 
 .ft-lp-elements .ft-lp-element-card .module-copy,
 .ft-email-buttons .ft-lp-element-card .module-copy {
-  top: 0;
-  right: 0;
+  justify-self: start;
 }
 
 .ft-email-buttons {
@@ -1655,10 +1663,9 @@ body {
 
 .ft-email-library .module-copy,
 .ft-lp-library .module-copy {
-  position: absolute;
-  top: 20px;
-  right: 0;
-  z-index: 4;
+  position: static;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .ft-email-library .module-copy__button,

@@ -23,3 +23,28 @@ jobs:
         run: |
           python3 -m unittest discover -s tests -v
           node tests/test_library_routes.cjs
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser test tools
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Review desktop and mobile previews
+        run: |
+          python3 -m http.server 8765 > /tmp/design-library-server.log 2>&1 &
+          node tests/check_buttons.cjs
+          node tests/check_optimizations.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: design-library-browser-review
+          path: browser-review/
+          retention-days: 14
