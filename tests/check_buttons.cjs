@@ -20,6 +20,7 @@ const fs = require('node:fs');
       await page.setViewportSize({width, height: 900});
       for (const [route, count] of [['email/buttons', 4], ['lp/buttons-links', 6]]) {
         await page.goto('http://127.0.0.1:8765/#' + route, {waitUntil: 'networkidle'});
+        await page.locator(`[data-sidebar-item="${route.split('/')[1]}"].is-active`).waitFor();
         if (route.startsWith('lp')) {
           await page.waitForFunction(() => [...document.querySelectorAll('.ft-lp-shadow-host')].every(
             host => [...host.shadowRoot.querySelectorAll('link')].every(link => link.sheet)));
@@ -61,6 +62,7 @@ const fs = require('node:fs');
     await page.locator('[data-main-nav="email"]').click();
     await page.locator('[data-sidebar-item="buttons"]').click();
     await page.waitForURL('**/#email/buttons');
+    await page.locator('[data-email-button]').first().waitFor();
     assert.equal(await page.locator('[data-email-button]').count(), 4);
     assert.deepEqual(errors, []);
     console.log('Button routes, vertical layout and every copy payload passed at 1440px and 390px.');

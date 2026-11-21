@@ -17,6 +17,7 @@ const fs = require('node:fs');
       for (const route of ['email/buttons','email/tables','lp/benefits','lp/accordion','lp/callouts','lp/tables','lp/sticky-footer','tokens/text-lists']) {
         console.log(`Review ${route} at ${width}px`);
         await page.goto('http://127.0.0.1:8765/#' + route, {waitUntil:'domcontentloaded'});
+        await page.locator(`[data-sidebar-item="${route.split('/')[1]}"].is-active`).waitFor();
         await page.locator('#ft-content > section').waitFor();
         await page.waitForFunction(() => [...document.querySelectorAll('.ft-lp-shadow-host')].every(
           host => host.shadowRoot && [...host.shadowRoot.querySelectorAll('link')].every(link => link.sheet)));
