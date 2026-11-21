@@ -15,19 +15,25 @@ const fs = require('node:fs');
     for (const width of [1440,390]) {
       await page.setViewportSize({width,height:1000});
       for (const route of ['email/buttons','email/tables','lp/benefits','lp/accordion','lp/callouts','lp/tables','lp/sticky-footer','tokens/text-lists']) {
+        console.log(`Review ${route} at ${width}px`);
         await page.goto('http://127.0.0.1:8765/#' + route, {waitUntil:'domcontentloaded'});
         await page.locator('#ft-content > section').waitFor();
         await page.waitForFunction(() => [...document.querySelectorAll('.ft-lp-shadow-host')].every(
           host => host.shadowRoot && [...host.shadowRoot.querySelectorAll('link')].every(link => link.sheet)));
         await page.evaluate(() => document.fonts.ready);
+        // Hash navigation changes color through a short CSS transition.
+        await page.waitForFunction(() => {
+          const active=document.querySelector('[data-main-nav][aria-current="page"]');
+          return active && getComputedStyle(active).color==='rgb(51, 51, 51)' && Number(getComputedStyle(active).fontWeight)===700;
+        });
         assert.deepEqual(await page.locator('[data-main-nav]').allTextContents(), ['E-Mail','Landing Page','Foundations']);
         const nav = await page.locator('[data-main-nav]').evaluateAll(links => links.map(link => ({
           active:link.getAttribute('aria-current') === 'page',
           color:getComputedStyle(link).color,weight:getComputedStyle(link).fontWeight,
         })));
         assert.equal(nav.filter(link => link.active).length,1);
-        assert.ok(nav.filter(link => link.active).every(link => link.color === 'rgb(51, 51, 51)' && Number(link.weight) === 700));
-        assert.ok(nav.filter(link => !link.active).every(link => link.color === 'rgb(103, 103, 103)' && Number(link.weight) === 400));
+        assert.ok(nav.filter(link => link.active).every(link => link.color === 'rgb(51, 51, 51)' && Number(link.weight) === 700),JSON.stringify({route,width,nav}));
+        assert.ok(nav.filter(link => !link.active).every(link => link.color === 'rgb(103, 103, 103)' && Number(link.weight) === 400),JSON.stringify({route,width,nav}));
         const copies = await page.locator('.test-module-row, .ft-lp-element-card').evaluateAll(rows => rows.flatMap(row => {
           const copy = row.querySelector(':scope > .module-copy');
           const frame = row.querySelector(':scope > .test-module-frame');

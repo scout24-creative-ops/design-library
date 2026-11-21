@@ -32,8 +32,9 @@ const fs = require('node:fs');
         for (let i = 0; i < count; i++) {
           const card = cards.nth(i);
           const box = await card.boundingBox();
-          assert.ok(box.y >= previousBottom, `${route} must stack at ${width}px`);
-          previousBottom = box.y + box.height;
+          const documentY = box.y + await page.evaluate(() => scrollY);
+          assert.ok(documentY >= previousBottom, `${route} must stack at ${width}px`);
+          previousBottom = documentY + box.height;
           const anchor = card.locator(route.startsWith('lp') ? '.frame-root a' : '.test-email-preview a');
           assert.equal(await anchor.count(), 1);
           const anchorBox = await anchor.boundingBox();
