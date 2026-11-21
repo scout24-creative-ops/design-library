@@ -19,6 +19,13 @@ const LP_REMOTE_STYLESHEETS = data.lpStylesheets || [];
 const LP_DESKTOP_TYPOGRAPHY_QUERY = window.matchMedia("(min-width: 669px)");
 const EMAIL_HERO_SIDEBAR_ITEMS = new Set(["heros-left", "heros-center", "heros-fakeforms"]);
 const DEFAULT_ROUTE = { section: "email", item: "logo" };
+const EMAIL_BUTTONS_ITEM = { id: "buttons", label: "Buttons", kind: "emailButtons" };
+const EMAIL_BUTTON_VARIANTS = [
+  ["button-filled-brand", "Filled Brand"],
+  ["button-filled-default", "Filled Default"],
+  ["button-outline-strong", "Outline Strong"],
+  ["button-outline-weak", "Outline Weak"],
+];
 
 function escapeHtml(value) {
   return String(value)
@@ -98,7 +105,12 @@ function renderTopNav() {
 
 // Hash routes stay intentionally small: #home or #<section>/<item>.
 function getSectionItems(sectionKey) {
-  return data.sections[sectionKey]?.items || [];
+  const items = data.sections[sectionKey]?.items || [];
+  if (sectionKey !== "email") return items;
+  // Component examples belong to the UI, not the canonical module inventory.
+  const footerIndex = items.findIndex((item) => item.id === "footer");
+  const index = footerIndex < 0 ? items.length : footerIndex;
+  return [...items.slice(0, index), EMAIL_BUTTONS_ITEM, ...items.slice(index)];
 }
 
 function getDefaultItem(sectionKey) {
@@ -547,11 +559,35 @@ function slugifyModuleName(value) {
 }
 
 function renderEmailSection(item) {
+  if (item.kind === "emailButtons") {
+    return `<div class="ft-email-library ft-email-buttons">
+      <div class="ft-lp-element-grid ft-lp-element-grid--stack">
+        ${EMAIL_BUTTON_VARIANTS.map(([className, label]) => {
+          const markup = `<a class="${className}" href="#">${label}</a>`;
+          return `<div class="ft-lp-element-card" data-email-button="${className}">
+            ${renderModuleCopy(markup, label)}
+            <div class="test-module-frame"><div class="test-email-preview"><div class="ft-email-button-preview">${markup}</div></div></div>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>`;
+  }
   return `<div class="ft-email-library">${item.libraryHtml || ""}</div>`;
 }
 
+function getLpElementVariants(elementId) {
+  const element = data.lpElements?.[elementId];
+  if (!element) return [];
+  if (elementId !== "buttons") return [element];
+  // The canonical buttons block contains standalone anchors. Keep each anchor
+  // verbatim so copying a variant never includes its neighbours or preview UI.
+  return Array.from(element.markup.matchAll(/<a\b[^>]*>[\s\S]*?<\/a>/g), (match, index) => ({
+    markup: match[0], copyPayload: match[0],
+    copyLabel: match[0].replace(/<[^>]*>/g, ""), index,
+  }));
+}
+
 function renderLpElements(item) {
-  const elementMap = data.lpElements || {};
   const pageId = item.id || "";
 
   return `
@@ -563,11 +599,7 @@ function renderLpElements(item) {
               <h2 class="ft-lp-element-group__title">${escapeHtml(group.label || "")}</h2>
               <div class="ft-lp-element-grid ft-lp-element-grid--${escapeHtml(group.layout || "grid")}">
                 ${(group.elements || [])
-                  .map((elementId) => {
-                    const element = elementMap[elementId];
-                    if (!element) return "";
-
-                    return `
+                  .map((elementId) => getLpElementVariants(elementId).map((element) => `
                       <div class="ft-lp-element-card" data-lp-element-card="${escapeHtml(elementId)}">
                         ${renderModuleCopy(element.copyPayload, element.copyLabel || elementId)}
                         <div class="test-module-frame">
@@ -575,13 +607,13 @@ function renderLpElements(item) {
                             class="ft-lp-shadow-host"
                             data-lp-page="${escapeHtml(pageId)}"
                             data-lp-element="${escapeHtml(elementId)}"
+                            ${element.index !== undefined ? `data-lp-button-index="${element.index}"` : ""}
                             data-lp-preview-name="${escapeHtml(elementId)}"
-                            data-frame-id="lp-element-${escapeHtml(slugifyModuleName(elementId))}"
+                            data-frame-id="lp-element-${escapeHtml(slugifyModuleName(elementId))}${element.index !== undefined ? `-${element.index}` : ""}"
                           ></div>
                         </div>
                       </div>
-                    `;
-                  })
+                    `).join(""))
                   .join("")}
               </div>
             </section>
@@ -648,7 +680,8 @@ function renderSectionContent(sectionKey, item) {
 
 function renderSection() {
   const currentSection = data.sections[state.section];
-  const currentItem = currentSection.items.find((item) => item.id === state.item) || currentSection.items[0];
+  const items = getSectionItems(state.section);
+  const currentItem = items.find((item) => item.id === state.item) || items[0];
   const noteHtml = renderNote(getSectionNote(state.section, currentItem));
   const sectionClass =
     state.section === "email" || state.section === "lp"
@@ -656,7 +689,7 @@ function renderSection() {
       : "ft-content-section";
 
   state.item = currentItem.id;
-  renderSidebar(currentSection.items, currentSection.label, state.section);
+  renderSidebar(items, currentSection.label, state.section);
 
   contentRoot.innerHTML = `
     ${noteHtml}
@@ -910,7 +943,8 @@ function hydrateLpModulePreviews() {
   contentRoot.querySelectorAll(".ft-lp-shadow-host").forEach((host) => {
     const moduleName = host.dataset.lpModule || "";
     const elementId = host.dataset.lpElement || "";
-    const markup = moduleName ? markupMap[moduleName] : elementMap[elementId]?.markup;
+    const markup = moduleName ? markupMap[moduleName] :
+      host.dataset.lpButtonIndex !== undefined ? getLpElementVariants(elementId)[Number(host.dataset.lpButtonIndex)]?.markup : elementMap[elementId]?.markup;
     if ((!moduleName && !elementId) || !markup) return;
 
     const shadowRoot = host.shadowRoot || host.attachShadow({ mode: "open" });
