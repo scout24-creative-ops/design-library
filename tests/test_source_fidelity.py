@@ -47,7 +47,7 @@ class ContentfulDesignLibrarySyncTest(unittest.TestCase):
 
     def test_lp_uses_existing_public_css_and_only_preview_containment(self):
         css=lp.build_lp_shadow_styles()
-        self.assertIn('https://scout24-creative-ops.github.io/lp-builder/runtime/contentful/lpbuilder-bridge.css',lp.PUBLIC_STYLESHEETS)
+        self.assertIn('https://scout24-creative-ops.github.io/lp-builder/releases/contentful/layout-v1/lpbuilder-bridge.css',lp.PUBLIC_STYLESHEETS)
         self.assertNotIn((LP/'runtime/contentful/lpbuilder-bridge.css').read_text().strip(),css)
         self.assertIn('Preview containment only',css)
         app=(ROOT/'app.js').read_text()

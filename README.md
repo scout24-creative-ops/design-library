@@ -127,9 +127,13 @@ Media Queries laufen im tatsächlichen Iframe-Viewport.
 Der LP-Wrapper bildet Contentful mit maximal 1200 px inklusive 16/24/32 px Padding
 nach; der E-Mail-Wrapper ist maximal 600 px breit und addiert kein Modul-Padding.
 Kopieraktionen bleiben außerhalb der Vorschau und liefern das kanonische Markup.
-Produktions-CSS/Runtime bleiben auf ihren bestehenden URLs verlinkt. Die noch
-ausgelieferte Hero-Sonderbreite wird nicht durch Vorschau-CSS versteckt; ihre
-Angleichung in `lp-builder/modules/contentful-runtime/` braucht einen separaten Release.
+Die Bridge-CSS ist auf den veröffentlichten Release
+`lp-builder/releases/contentful/layout-v1/lpbuilder-bridge.css` festgelegt; die
+JavaScript-Adresse bleibt unverändert. Der Generator prüft Release-Manifest und
+Bestands-Bridge, ohne Produktions-CSS zu kopieren oder durch Vorschau-Regeln zu
+ersetzen. Die Hero-Inhaltskanten werden im Browser gegen den Wrapper geprüft.
+Den Library-PR erst nach dem tatsächlichen Frontend-Rollout derselben CSS-Version
+übernehmen; ein Asset-Merge allein aktiviert keine Contentful-Einbindung.
 
 Prüfen: `node tests/check_layout.cjs` testet alle 72 Module an beiden Referenzbreiten
 und zusätzliche responsive Grenzen. Die vorhandenen Button-, Icon-, Tabellen-,
