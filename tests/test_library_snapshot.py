@@ -36,7 +36,7 @@ class LibrarySnapshot(unittest.TestCase):
         selected=[m for page in data['sections']['lp']['items'] for m in page.get('modules',[])]
         self.assertEqual(selected,list(payload))
         self.assertEqual(len(selected),len(set(selected)))
-        elements=[e for page in data['sections']['lp']['items'] for group in page.get('elementGroups',[]) for e in group['elements']]
+        elements=[e for section in ('lp','tokens') for page in data['sections'][section]['items'] for group in page.get('elementGroups',[]) for e in group['elements']]
         self.assertEqual(elements,list(data['lpElements']))
 
     def test_html_local_assets_exist(self):

@@ -2,7 +2,7 @@
 window.designLibraryData = {
   "sections": {
     "email": {
-      "label": "E-Mail-Module",
+      "label": "E-Mail",
       "items": [
         {
           "id": "logo",
@@ -149,7 +149,7 @@ window.designLibraryData = {
       ]
     },
     "lp": {
-      "label": "LP-Module",
+      "label": "Landing Page",
       "items": [
         {
           "id": "heros",
@@ -291,34 +291,6 @@ window.designLibraryData = {
           "kind": "lpModules"
         },
         {
-          "id": "text-lists",
-          "label": "Text & Lists",
-          "modules": [],
-          "elementGroups": [
-            {
-              "label": "Text",
-              "layout": "stack",
-              "elements": [
-                "headline-variants",
-                "text-variants",
-                "text-links"
-              ]
-            },
-            {
-              "label": "Lists",
-              "layout": "stack",
-              "elements": [
-                "list-plain",
-                "list-ordered",
-                "list-nested",
-                "list-bullet",
-                "checkmark-list"
-              ]
-            }
-          ],
-          "kind": "lpElements"
-        },
-        {
           "id": "buttons-links",
           "label": "Buttons & Links",
           "modules": [],
@@ -333,42 +305,11 @@ window.designLibraryData = {
             }
           ],
           "kind": "lpElements"
-        },
-        {
-          "id": "colors",
-          "label": "Colors & Surfaces",
-          "modules": [],
-          "elementGroups": [
-            {
-              "label": "Farben und Flächen",
-              "layout": "stack",
-              "elements": [
-                "colors",
-                "surfaces"
-              ]
-            }
-          ],
-          "kind": "lpElements"
-        },
-        {
-          "id": "svg",
-          "label": "SVG-Komponente",
-          "modules": [],
-          "elementGroups": [
-            {
-              "label": "Statisches SVG",
-              "layout": "stack",
-              "elements": [
-                "static-inline-svg-diagram"
-              ]
-            }
-          ],
-          "kind": "lpElements"
         }
       ]
     },
     "tokens": {
-      "label": "Design-Tokens",
+      "label": "Foundations",
       "items": [
         {
           "id": "colors",
@@ -399,11 +340,49 @@ window.designLibraryData = {
           "id": "ratios",
           "label": "Image Ratios",
           "kind": "tokens"
+        },
+        {
+          "id": "text-lists",
+          "label": "Text & Lists",
+          "kind": "lpElements",
+          "modules": [],
+          "elementGroups": [
+            {
+              "label": "Text",
+              "layout": "stack",
+              "elements": [
+                "headline-variants",
+                "text-variants",
+                "text-links"
+              ]
+            },
+            {
+              "label": "Lists",
+              "layout": "stack",
+              "elements": [
+                "list-plain",
+                "list-ordered",
+                "list-nested",
+                "list-bullet",
+                "checkmark-list"
+              ]
+            }
+          ]
         }
       ]
     }
   },
   "lpElements": {
+    "buttons": {
+      "markup": "<div data-lpb-component=\"buttons\"><a class=\"lpb-button lpb-button--filled-brand\" href=\"#\">Filled Brand</a> <a class=\"lpb-button lpb-button--filled-default\" href=\"#\">Filled Default</a> <a class=\"lpb-button lpb-button--outline-strong\" href=\"#\">Outline Strong</a> <a class=\"lpb-button lpb-button--outline-weak\" href=\"#\">Outline Weak</a> <a class=\"lpb-button lpb-button--filled-brand lpb-button--mobile-full\" href=\"#\">Filled Brand, mobile full width</a></div>",
+      "copyPayload": "<div data-lpb-component=\"buttons\"><a class=\"lpb-button lpb-button--filled-brand\" href=\"#\">Filled Brand</a> <a class=\"lpb-button lpb-button--filled-default\" href=\"#\">Filled Default</a> <a class=\"lpb-button lpb-button--outline-strong\" href=\"#\">Outline Strong</a> <a class=\"lpb-button lpb-button--outline-weak\" href=\"#\">Outline Weak</a> <a class=\"lpb-button lpb-button--filled-brand lpb-button--mobile-full\" href=\"#\">Filled Brand, mobile full width</a></div>",
+      "copyLabel": "buttons"
+    },
+    "chevron-link": {
+      "markup": "<div data-lpb-component=\"chevron-link\"><a class=\"lpb-chevron-link\" href=\"/example\"><img class=\"lpb-chevron-link__icon\" src=\"https://www.immobilienscout24.de/content/dam/claude-lp-creator/assets/Chevron.svg\" alt=\"\" width=\"16\" height=\"16\" loading=\"lazy\"><span>Mehr erfahren</span></a></div>",
+      "copyPayload": "<div data-lpb-component=\"chevron-link\"><a class=\"lpb-chevron-link\" href=\"/example\"><img class=\"lpb-chevron-link__icon\" src=\"https://www.immobilienscout24.de/content/dam/claude-lp-creator/assets/Chevron.svg\" alt=\"\" width=\"16\" height=\"16\" loading=\"lazy\"><span>Mehr erfahren</span></a></div>",
+      "copyLabel": "chevron-link"
+    },
     "headline-variants": {
       "markup": "<div data-lpb-component=\"headline-variants\"><p class=\"font-heading-xlarge-regular\">Heading XLarge Regular</p><p class=\"font-heading-xlarge-bold\">Heading XLarge Bold</p><p class=\"font-heading-large-regular\">Heading Large Regular</p><p class=\"font-heading-large-bold\">Heading Large Bold</p><p class=\"font-heading-medium-regular\">Heading Medium Regular</p><p class=\"font-heading-medium-bold\">Heading Medium Bold</p><p class=\"font-heading-small-regular\">Heading Small Regular</p><p class=\"font-heading-small-bold\">Heading Small Bold</p><p class=\"font-heading-xsmall-regular\">Heading XSmall Regular</p><p class=\"font-heading-xsmall-bold\">Heading XSmall Bold</p></div>",
       "copyPayload": "<div data-lpb-component=\"headline-variants\"><p class=\"font-heading-xlarge-regular\">Heading XLarge Regular</p><p class=\"font-heading-xlarge-bold\">Heading XLarge Bold</p><p class=\"font-heading-large-regular\">Heading Large Regular</p><p class=\"font-heading-large-bold\">Heading Large Bold</p><p class=\"font-heading-medium-regular\">Heading Medium Regular</p><p class=\"font-heading-medium-bold\">Heading Medium Bold</p><p class=\"font-heading-small-regular\">Heading Small Regular</p><p class=\"font-heading-small-bold\">Heading Small Bold</p><p class=\"font-heading-xsmall-regular\">Heading XSmall Regular</p><p class=\"font-heading-xsmall-bold\">Heading XSmall Bold</p></div>",
@@ -443,31 +422,6 @@ window.designLibraryData = {
       "markup": "<div data-lpb-component=\"checkmark-list\"><ul class=\"checkmark-list\"><li class=\"checkmark-list__item\"><span class=\"checkmark-list__icon\" aria-hidden=\"true\"></span><span class=\"checkmark-list__text font-body-large-regular\">Alle wichtigen Informationen bleiben übersichtlich an einem Ort.</span></li><li class=\"checkmark-list__item\"><span class=\"checkmark-list__icon\" aria-hidden=\"true\"></span><span class=\"checkmark-list__text font-body-large-regular\">Sie treffen Entscheidungen auf einer nachvollziehbaren Grundlage.</span></li><li class=\"checkmark-list__item\"><span class=\"checkmark-list__icon\" aria-hidden=\"true\"></span><span class=\"checkmark-list__text font-body-large-regular\">Passende Services unterstützen Sie bei jedem nächsten Schritt.</span></li></ul></div>",
       "copyPayload": "<div data-lpb-component=\"checkmark-list\"><ul class=\"checkmark-list\"><li class=\"checkmark-list__item\"><span class=\"checkmark-list__icon\" aria-hidden=\"true\"></span><span class=\"checkmark-list__text font-body-large-regular\">Alle wichtigen Informationen bleiben übersichtlich an einem Ort.</span></li><li class=\"checkmark-list__item\"><span class=\"checkmark-list__icon\" aria-hidden=\"true\"></span><span class=\"checkmark-list__text font-body-large-regular\">Sie treffen Entscheidungen auf einer nachvollziehbaren Grundlage.</span></li><li class=\"checkmark-list__item\"><span class=\"checkmark-list__icon\" aria-hidden=\"true\"></span><span class=\"checkmark-list__text font-body-large-regular\">Passende Services unterstützen Sie bei jedem nächsten Schritt.</span></li></ul></div>",
       "copyLabel": "checkmark-list"
-    },
-    "buttons": {
-      "markup": "<div data-lpb-component=\"buttons\"><a class=\"lpb-button lpb-button--filled-brand\" href=\"#\">Filled Brand</a> <a class=\"lpb-button lpb-button--filled-default\" href=\"#\">Filled Default</a> <a class=\"lpb-button lpb-button--outline-strong\" href=\"#\">Outline Strong</a> <a class=\"lpb-button lpb-button--outline-weak\" href=\"#\">Outline Weak</a> <a class=\"lpb-button lpb-button--filled-brand lpb-button--mobile-full\" href=\"#\">Filled Brand, mobile full width</a></div>",
-      "copyPayload": "<div data-lpb-component=\"buttons\"><a class=\"lpb-button lpb-button--filled-brand\" href=\"#\">Filled Brand</a> <a class=\"lpb-button lpb-button--filled-default\" href=\"#\">Filled Default</a> <a class=\"lpb-button lpb-button--outline-strong\" href=\"#\">Outline Strong</a> <a class=\"lpb-button lpb-button--outline-weak\" href=\"#\">Outline Weak</a> <a class=\"lpb-button lpb-button--filled-brand lpb-button--mobile-full\" href=\"#\">Filled Brand, mobile full width</a></div>",
-      "copyLabel": "buttons"
-    },
-    "chevron-link": {
-      "markup": "<div data-lpb-component=\"chevron-link\"><a class=\"lpb-chevron-link\" href=\"/example\"><img class=\"lpb-chevron-link__icon\" src=\"https://www.immobilienscout24.de/content/dam/claude-lp-creator/assets/Chevron.svg\" alt=\"\" width=\"16\" height=\"16\" loading=\"lazy\"><span>Mehr erfahren</span></a></div>",
-      "copyPayload": "<div data-lpb-component=\"chevron-link\"><a class=\"lpb-chevron-link\" href=\"/example\"><img class=\"lpb-chevron-link__icon\" src=\"https://www.immobilienscout24.de/content/dam/claude-lp-creator/assets/Chevron.svg\" alt=\"\" width=\"16\" height=\"16\" loading=\"lazy\"><span>Mehr erfahren</span></a></div>",
-      "copyLabel": "chevron-link"
-    },
-    "colors": {
-      "markup": "<div data-lpb-component=\"colors\"><div class=\"lpb-color-bg--teal lpb-color-text--charcoal\">Teal</div><div class=\"lpb-color-bg--yellow lpb-color-text--charcoal\">Yellow</div><div class=\"lpb-color-bg--blue lpb-color-text--charcoal\">Blue</div><div class=\"lpb-color-bg--purple lpb-color-text--charcoal\">Purple</div><div class=\"lpb-color-bg--orange lpb-color-text--charcoal\">Orange</div><div class=\"lpb-color-bg--charcoal lpb-color-text--white\">Charcoal</div><div class=\"lpb-color-bg--white lpb-color-text--charcoal\">White</div><div class=\"lpb-color-bg--sand lpb-color-text--charcoal\">Sand</div><div class=\"lpb-color-bg--grey-1 lpb-color-text--charcoal\">Grey 1</div><div class=\"lpb-color-bg--grey-2 lpb-color-text--charcoal\">Grey 2</div><div class=\"lpb-color-bg--grey-3 lpb-color-text--charcoal\">Grey 3</div><div class=\"lpb-color-bg--grey-4 lpb-color-text--charcoal\">Grey 4</div><div class=\"lpb-color-bg--grey-5 lpb-color-text--charcoal\">Grey 5</div><div class=\"lpb-color-bg--grey-6 lpb-color-text--white\">Grey 6</div><p class=\"lpb-color-text--charcoal\">Charcoal text</p><p class=\"lpb-color-text--white lpb-color-bg--charcoal\">White / inversive text</p><p class=\"lpb-color-text--muted\">Muted text</p></div>",
-      "copyPayload": "<div data-lpb-component=\"colors\"><div class=\"lpb-color-bg--teal lpb-color-text--charcoal\">Teal</div><div class=\"lpb-color-bg--yellow lpb-color-text--charcoal\">Yellow</div><div class=\"lpb-color-bg--blue lpb-color-text--charcoal\">Blue</div><div class=\"lpb-color-bg--purple lpb-color-text--charcoal\">Purple</div><div class=\"lpb-color-bg--orange lpb-color-text--charcoal\">Orange</div><div class=\"lpb-color-bg--charcoal lpb-color-text--white\">Charcoal</div><div class=\"lpb-color-bg--white lpb-color-text--charcoal\">White</div><div class=\"lpb-color-bg--sand lpb-color-text--charcoal\">Sand</div><div class=\"lpb-color-bg--grey-1 lpb-color-text--charcoal\">Grey 1</div><div class=\"lpb-color-bg--grey-2 lpb-color-text--charcoal\">Grey 2</div><div class=\"lpb-color-bg--grey-3 lpb-color-text--charcoal\">Grey 3</div><div class=\"lpb-color-bg--grey-4 lpb-color-text--charcoal\">Grey 4</div><div class=\"lpb-color-bg--grey-5 lpb-color-text--charcoal\">Grey 5</div><div class=\"lpb-color-bg--grey-6 lpb-color-text--white\">Grey 6</div><p class=\"lpb-color-text--charcoal\">Charcoal text</p><p class=\"lpb-color-text--white lpb-color-bg--charcoal\">White / inversive text</p><p class=\"lpb-color-text--muted\">Muted text</p></div>",
-      "copyLabel": "colors"
-    },
-    "surfaces": {
-      "markup": "<div data-lpb-component=\"surfaces\"><div class=\"lpb-surface--brand\">Brand surface</div><div class=\"lpb-surface--default\">Default surface</div><div class=\"lpb-surface--weak\">Weak surface</div></div>",
-      "copyPayload": "<div data-lpb-component=\"surfaces\"><div class=\"lpb-surface--brand\">Brand surface</div><div class=\"lpb-surface--default\">Default surface</div><div class=\"lpb-surface--weak\">Weak surface</div></div>",
-      "copyLabel": "surfaces"
-    },
-    "static-inline-svg-diagram": {
-      "markup": "<div data-lpb-component=\"static-inline-svg-diagram\">\n  <figure class=\"margin-none\">\n    <svg class=\"lpb-image--responsive\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 800 400\" width=\"100%\" role=\"img\" aria-labelledby=\"lpb-svg-diagram-example-title lpb-svg-diagram-example-desc\" focusable=\"false\">\n      <title id=\"lpb-svg-diagram-example-title\">Anteil der Testwerte</title>\n      <desc id=\"lpb-svg-diagram-example-desc\">Statisches Balkendiagramm: Kategorie A hat 42 Prozent, Kategorie B hat 58 Prozent.</desc>\n      <rect width=\"800\" height=\"400\" fill=\"#ffffff\"></rect>\n      <text x=\"40\" y=\"55\" font-size=\"24\" font-weight=\"700\" fill=\"#333333\">Technischer Diagrammtest</text>\n      <text x=\"40\" y=\"145\" font-size=\"18\" fill=\"#333333\">Kategorie A</text>\n      <rect x=\"190\" y=\"115\" width=\"252\" height=\"42\" rx=\"4\" fill=\"#00ffd9\"></rect>\n      <text x=\"458\" y=\"143\" font-size=\"18\" fill=\"#333333\">42 %</text>\n      <text x=\"40\" y=\"235\" font-size=\"18\" fill=\"#333333\">Kategorie B</text>\n      <rect x=\"190\" y=\"205\" width=\"348\" height=\"42\" rx=\"4\" fill=\"#008c82\"></rect>\n      <text x=\"554\" y=\"233\" font-size=\"18\" fill=\"#333333\">58 %</text>\n    </svg>\n    <figcaption class=\"font-body-medium-regular margin-top-s\"><strong>Quelle:</strong> Interne Testdaten – ausschließlich technischer Darstellungsnachweis.</figcaption>\n  </figure>\n</div>",
-      "copyPayload": "<div data-lpb-component=\"static-inline-svg-diagram\">\n  <figure class=\"margin-none\">\n    <svg class=\"lpb-image--responsive\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 800 400\" width=\"100%\" role=\"img\" aria-labelledby=\"lpb-svg-diagram-example-title lpb-svg-diagram-example-desc\" focusable=\"false\">\n      <title id=\"lpb-svg-diagram-example-title\">Anteil der Testwerte</title>\n      <desc id=\"lpb-svg-diagram-example-desc\">Statisches Balkendiagramm: Kategorie A hat 42 Prozent, Kategorie B hat 58 Prozent.</desc>\n      <rect width=\"800\" height=\"400\" fill=\"#ffffff\"></rect>\n      <text x=\"40\" y=\"55\" font-size=\"24\" font-weight=\"700\" fill=\"#333333\">Technischer Diagrammtest</text>\n      <text x=\"40\" y=\"145\" font-size=\"18\" fill=\"#333333\">Kategorie A</text>\n      <rect x=\"190\" y=\"115\" width=\"252\" height=\"42\" rx=\"4\" fill=\"#00ffd9\"></rect>\n      <text x=\"458\" y=\"143\" font-size=\"18\" fill=\"#333333\">42 %</text>\n      <text x=\"40\" y=\"235\" font-size=\"18\" fill=\"#333333\">Kategorie B</text>\n      <rect x=\"190\" y=\"205\" width=\"348\" height=\"42\" rx=\"4\" fill=\"#008c82\"></rect>\n      <text x=\"554\" y=\"233\" font-size=\"18\" fill=\"#333333\">58 %</text>\n    </svg>\n    <figcaption class=\"font-body-medium-regular margin-top-s\"><strong>Quelle:</strong> Interne Testdaten – ausschließlich technischer Darstellungsnachweis.</figcaption>\n  </figure>\n</div>",
-      "copyLabel": "static-inline-svg-diagram"
     }
   },
   "tokens": {
@@ -783,8 +737,14 @@ window.designLibraryData = {
   },
   "lpStylesheets": [
     "https://www.static-immobilienscout24.de/fro/core/8.5.0/css/core.min.css",
+    "https://www.static-immobilienscout24.de/fro/cosma-ui-icons/6.20.0/s24-icons.css",
     "https://scout24-creative-ops.github.io/lp-builder/runtime/contentful/lpbuilder-bridge.css"
   ],
+  "lpModuleStylesheets": {
+    "product-comparison-table": [
+      "https://scout24-creative-ops.github.io/public/LP%20Builder%20%E2%80%93%20Contentful/lpbuilder-bridge/lpbuilder-bridge.css"
+    ]
+  },
   "serviceProducts": [
     {
       "id": "ppa",

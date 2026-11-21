@@ -118,6 +118,10 @@ function getDefaultItem(sectionKey) {
 }
 
 function normalizeRoute(sectionKey, itemId) {
+  if (sectionKey === "foundations") sectionKey = "tokens";
+  if (sectionKey === "lp" && itemId === "text-lists") sectionKey = "tokens";
+  if (sectionKey === "lp" && itemId === "colors") return { section: "tokens", item: "colors" };
+  if (sectionKey === "lp" && itemId === "svg") itemId = "diagrams";
   if (sectionKey === "lp" && itemId === "steps") itemId = "process";
   if (sectionKey === "home") return { ...DEFAULT_ROUTE };
 
@@ -663,6 +667,7 @@ function renderLpSection(item) {
 }
 
 function renderSectionContent(sectionKey, item) {
+  if (item.kind === "lpElements") return renderLpElements(item);
   if (sectionKey === "tokens") {
     return renderTokenContent(item.id);
   }
@@ -684,7 +689,7 @@ function renderSection() {
   const currentItem = items.find((item) => item.id === state.item) || items[0];
   const noteHtml = renderNote(getSectionNote(state.section, currentItem));
   const sectionClass =
-    state.section === "email" || state.section === "lp"
+    state.section === "email" || state.section === "lp" || currentItem.kind === "lpElements"
       ? "ft-content-section ft-content-section--library"
       : "ft-content-section";
 
@@ -961,7 +966,7 @@ function hydrateLpModulePreviews() {
     `;
     shadowRoot.appendChild(baseStyle);
 
-    LP_REMOTE_STYLESHEETS.forEach((href) => {
+    [...LP_REMOTE_STYLESHEETS, ...(data.lpModuleStylesheets?.[moduleName] || [])].forEach((href) => {
       const link = document.createElement("link");
       link.rel = "stylesheet";
       link.href = href;
@@ -980,11 +985,36 @@ function hydrateLpModulePreviews() {
     wrapper.innerHTML = `<main class="frame-root ${getLpResponsiveSizeClass()}${elementId ? " frame-root--element" : ""}">${markup}</main>`;
     shadowRoot.appendChild(wrapper);
 
+    if (moduleName === "accordion") addAccordionPreviewExamples(wrapper);
     initLpAccordion(wrapper);
     initLpCounterAnimated(wrapper);
     initLpVideo(wrapper);
 
     host.dataset.lpRendered = "true";
+  });
+}
+
+function addAccordionPreviewExamples(root) {
+  const accordion = root.querySelector(".accordion");
+  const original = accordion?.querySelector(".accordion__item");
+  if (!original || accordion.children.length >= 5) return;
+  const examples = [
+    ["Wo finde ich weitere Informationen?", "Über die verlinkten Inhalte gelangen Sie zu weiterführenden Informationen und passenden Services."],
+    ["An wen kann ich mich bei Fragen wenden?", "Nutzen Sie die auf der jeweiligen Seite angegebenen Kontaktmöglichkeiten für Ihr Anliegen."],
+  ];
+  examples.slice(0, 5 - accordion.children.length).forEach(([question, answer], offset) => {
+    const item = original.cloneNode(true);
+    const trigger = item.querySelector(".accordion__trigger");
+    const panel = item.querySelector(".accordion__panel");
+    const id = `library-accordion-extra-${offset + 1}`;
+    trigger.id = `${id}-trigger`;
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.setAttribute("aria-controls", `${id}-panel`);
+    item.querySelector(".accordion__question").textContent = question;
+    panel.id = `${id}-panel`;
+    panel.setAttribute("aria-labelledby", trigger.id);
+    panel.querySelector("p").textContent = answer;
+    accordion.appendChild(item);
   });
 }
 

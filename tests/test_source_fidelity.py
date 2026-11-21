@@ -36,10 +36,11 @@ class ContentfulDesignLibrarySyncTest(unittest.TestCase):
         self.assertEqual(34,len(actual))
         self.assertEqual(len(lp.SELECTED_LP_MODULE_IDS),len(set(lp.SELECTED_LP_MODULE_IDS)))
 
-    def test_all_thirteen_component_payloads_are_exact_canonical_markup(self):
+    def test_active_component_payloads_are_exact_canonical_markup(self):
         elements=lp.build_lp_element_data();canonical=lp.blocks('COMPONENT')
-        self.assertEqual(13,len(elements))
-        self.assertEqual(set(elements),set(canonical))
+        self.assertEqual(10,len(elements))
+        self.assertEqual(set(elements)|lp.OMITTED_LP_ELEMENT_IDS,set(canonical))
+        self.assertEqual({'colors','surfaces','static-inline-svg-diagram'},lp.OMITTED_LP_ELEMENT_IDS)
         for key,payload in elements.items():
             self.assertEqual(canonical[key],payload['markup'])
             self.assertEqual(payload['markup'],payload['copyPayload'])
@@ -69,6 +70,7 @@ class ContentfulDesignLibrarySyncTest(unittest.TestCase):
         self.assertEqual({'email':38,'lp':34},manifest['moduleCounts'])
         data=json.loads(outputs['content-data.js'].split(sync.MARKER,1)[1].strip().removesuffix(';'))
         self.assertEqual(data['lpStylesheets'],lp.PUBLIC_STYLESHEETS)
+        self.assertEqual(data['lpModuleStylesheets'],lp.MODULE_STYLESHEETS)
         self.assertEqual(outputs['email-preview-styles.css'],(EMAIL/'modules/preview.css').read_text())
 
     def test_generation_is_deterministic(self):

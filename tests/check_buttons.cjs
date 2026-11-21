@@ -20,6 +20,7 @@ const fs = require('node:fs');
       await page.setViewportSize({width, height: 900});
       for (const [route, count] of [['email/buttons', 4], ['lp/buttons-links', 6]]) {
         await page.goto('http://127.0.0.1:8765/#' + route, {waitUntil: 'networkidle'});
+        await page.locator(`[data-sidebar-item="${route.split('/')[1]}"].is-active`).waitFor();
         if (route.startsWith('lp')) {
           await page.waitForFunction(() => [...document.querySelectorAll('.ft-lp-shadow-host')].every(
             host => [...host.shadowRoot.querySelectorAll('link')].every(link => link.sheet)));
@@ -32,8 +33,9 @@ const fs = require('node:fs');
         for (let i = 0; i < count; i++) {
           const card = cards.nth(i);
           const box = await card.boundingBox();
-          assert.ok(box.y >= previousBottom, `${route} must stack at ${width}px`);
-          previousBottom = box.y + box.height;
+          const documentY = box.y + await page.evaluate(() => scrollY);
+          assert.ok(documentY >= previousBottom, `${route} must stack at ${width}px`);
+          previousBottom = documentY + box.height;
           const anchor = card.locator(route.startsWith('lp') ? '.frame-root a' : '.test-email-preview a');
           assert.equal(await anchor.count(), 1);
           const anchorBox = await anchor.boundingBox();
@@ -45,7 +47,10 @@ const fs = require('node:fs');
           await card.locator('.module-copy__button').click();
           const value = await page.evaluate(() => window.copiedValue);
           assert.equal((value.match(/<a\b/g) || []).length, 1);
-          assert.equal(value, await anchor.evaluate(el => el.outerHTML));
+          const expected = route.startsWith('lp')
+            ? await card.locator('.frame-root').evaluate(el => el.innerHTML)
+            : await anchor.evaluate(el => el.outerHTML);
+          assert.equal(value, expected);
           copied.add(value);
         }
         assert.equal(copied.size, count, 'Every variant has its own copy payload');
@@ -57,6 +62,7 @@ const fs = require('node:fs');
     await page.locator('[data-main-nav="email"]').click();
     await page.locator('[data-sidebar-item="buttons"]').click();
     await page.waitForURL('**/#email/buttons');
+    await page.locator('[data-email-button]').first().waitFor();
     assert.equal(await page.locator('[data-email-button]').count(), 4);
     assert.deepEqual(errors, []);
     console.log('Button routes, vertical layout and every copy payload passed at 1440px and 390px.');

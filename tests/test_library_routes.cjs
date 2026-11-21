@@ -35,6 +35,19 @@ assert.equal((ids.get('ft-content').innerHTML.match(/class="module-copy"/g)||[])
 vm.runInContext(`Object.assign(state, {section:'lp',item:'buttons-links'}); render();`, context);
 assert.equal((ids.get('ft-content').innerHTML.match(/class="module-copy"/g)||[]).length, 6);
 assert.equal(vm.runInContext(`getLpElementVariants('buttons').length`, context), 5);
+for (const [from, expected] of [
+  [['lp','text-lists'], ['tokens','text-lists']],
+  [['lp','colors'], ['tokens','colors']],
+  [['lp','svg'], ['lp','diagrams']],
+  [['foundations','text-lists'], ['tokens','text-lists']],
+]) {
+  const result = vm.runInContext(`normalizeRoute(...${JSON.stringify(from)})`, context);
+  assert.deepEqual([result.section,result.item], expected);
+}
+const sections = context.window.designLibraryData.sections;
+assert.deepEqual(Object.values(sections).map(section => section.label), ['E-Mail','Landing Page','Foundations']);
+for (const id of ['text-lists','colors','svg']) assert.ok(!sections.lp.items.some(item => item.id === id));
+assert.equal(sections.tokens.items.filter(item => item.id === 'text-lists').length, 1);
 for (const section of ['home','agents','learning','missing']) {
   assert.equal(vm.runInContext(`normalizeRoute(${JSON.stringify(section)},'x').section`,context),'email');
 }
