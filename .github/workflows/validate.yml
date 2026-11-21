@@ -40,8 +40,10 @@ jobs:
       - name: Review desktop and mobile previews
         run: |
           python3 -m http.server 8765 > /tmp/design-library-server.log 2>&1 &
-          node tests/check_buttons.cjs
-          node tests/check_optimizations.cjs
+          library_review_status=0
+          node tests/check_buttons.cjs || library_review_status=$?
+          node tests/check_optimizations.cjs || library_review_status=$?
+          exit "$library_review_status"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

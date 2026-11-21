@@ -45,7 +45,10 @@ const fs = require('node:fs');
           await card.locator('.module-copy__button').click();
           const value = await page.evaluate(() => window.copiedValue);
           assert.equal((value.match(/<a\b/g) || []).length, 1);
-          assert.equal(value, await anchor.evaluate(el => el.outerHTML));
+          const expected = route.startsWith('lp')
+            ? await card.locator('.frame-root').evaluate(el => el.innerHTML)
+            : await anchor.evaluate(el => el.outerHTML);
+          assert.equal(value, expected);
           copied.add(value);
         }
         assert.equal(copied.size, count, 'Every variant has its own copy payload');
