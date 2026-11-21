@@ -1,0 +1,64 @@
+{
+  "name": "Design Library",
+  "sections": [
+    "email",
+    "lp",
+    "tokens"
+  ],
+  "sources": {
+    "lp-builder": {
+      "modules/component-library.html": "c86904dbc6836993e26ea59cc8f962885637b00e09d993562be30c75556b3b3e",
+      "runtime-lock.json": "8a98d16996ffad917ea1e6a1cecb83dfcbc4cf20096a048bfa89e37ad1ae44b4",
+      "runtime/contentful/lpbuilder-bridge.css": "26f018bc0f3bb5c2f9e660ef2cba5a8a71b4c93e95c2ba33775bed51795867dc"
+    },
+    "design-system": {
+      "tokens/brands/immoscout24.json": "df585e014edd4c03185aa04f57abcbee887609458382b40642d9034d2ddb3c93"
+    },
+    "email-builder": {
+      "modules/benefits-3col/preview.html": "f1add940bd827f59eae0c576bdfc380e228fdb13556ac17c96e6a1fa2c8e4aac",
+      "modules/contact/preview.html": "6a20556fd4f964aa197254559efb6b9609d0d8e57626b654456122f2d3db15fb",
+      "modules/contact-signoff/preview.html": "2b9b2afa0d35c2f693cbda2ee5cf70e6318c1bf7cf34f9244032a2eb669285dc",
+      "modules/footer/preview.html": "8d96a65da5336f5cc5deb6672e7f67239724a4b3da3c088837cad61ecbefdff5",
+      "modules/hero-cta-top/preview.html": "adb309e09b74c4f0eda84cf235066cb029fed62d60f81701a64cc1ccdae69da4",
+      "modules/hero-cta-top-center/preview.html": "c1cf69139b24f73c3f5944a249afe8461abd769077a4750395c0b8a21ccd5ae4",
+      "modules/hero-cta-top-no-bottom/preview.html": "a14f7ba5f7ae98ec61375122b24bf2ca1cfd911ba774a659dcd959f8d573accc",
+      "modules/hero-cta-top-no-bottom-center/preview.html": "24f31f31a05bdd0b3f88054cebcc0e509abf0adec9a926a96de125f2d5c71363",
+      "modules/hero-fakeform-buttons-image/preview.html": "f620deeb2abb13228bd762d55545e13f928b843141feb3b6f1dba8f028f64df2",
+      "modules/hero-image-head-copy-bleed-center/preview.html": "39f7aa294a93de9fb8426ff6e198ed05ec55a982789e9101c03f726eedd84813",
+      "modules/hero-image-textbox-cta-center/preview.html": "da55521e537fe53091527e64ac94dcda27846a944d9f94cf59d598da6e47e153",
+      "modules/hero-image-top/preview.html": "c4149f41eaa7f873a83b21b5e23f0bc49bf540e75a31814c19bef4cf6d1a36ec",
+      "modules/hero-image-top-bleed/preview.html": "2b58116e2220d32e036b75377f867a825c5ef6b815617dfd6aa0c44d413224c8",
+      "modules/hero-image-top-bleed-center/preview.html": "4abf922235e2b038c6005df7c2cb138dbfb875d0406d25eb3360c73015c470db",
+      "modules/hero-image-top-center/preview.html": "a694142a4c6e42081f1f73ea5fcfb2be6093a4c03ab74f2c3544945d47bf2d45",
+      "modules/homeowner-agent-cards/preview.html": "c67faffbfa7f540b10c724af48886e5eb9671bcb1ba366ecb17bbbbe1f294aaa",
+      "modules/homeowner-intro/preview.html": "28973c0dc92a963332cbbc8bbc4afb5d41653f06fcbbea34da310b63b63c993b",
+      "modules/homeowner-market-development/preview.html": "a57a30afd10e580da9beab02bd9e699e223934887e3821cb0eae475b033d6900",
+      "modules/homeowner-quick-prompt-dark/preview.html": "a52b26a23b33b408c558da9ddfb80dd6fc8a1e406cfde6330906bd54f381f2d6",
+      "modules/loft-regio-resi-intro/preview.html": "c38a3e993488886f1ad66742fe2f91d001805bb9e2c7023521a7fbb48e0a428f",
+      "modules/loft-regio-resi-teaser-1col/preview.html": "b5c90fd74817aa41559c2ff6544dfb5f5b8ce3e5dc3d2184195a3d181ef352d6",
+      "modules/loft-rnl-dev-intro/preview.html": "6f905d34df58d4b954249cf32d99d0be14365f99736a97f59b3123cbfd8d36f3",
+      "modules/loft-rnl-dev-teaser-1col/preview.html": "95c8b01bb34e04a8cd60575450a5680320388df46b631802083a25105b3fd151",
+      "modules/loft-snl-copy-cta/preview.html": "d22a9092c491f14cd15f91095e6546b4a0928c8c938ab319e2c551a0c7ed4b61",
+      "modules/loft-snl-copy-sections-cta/preview.html": "68bf631a306b794c486e3a940bc204b058ab6fc2566e9bc52a1513c5b7b5c376",
+      "modules/logo/preview.html": "fcb224cb15376ae65c6b412863b61a058f84321a5690e23a3fb7f61ec17f8570",
+      "modules/logo-centered/preview.html": "020667a8782e8b8905160843eb48e5180882a13ae9b69f15a90865f3dd1e35c0",
+      "modules/servicetiles/preview.html": "5f629557c462c2e7beb50ee920cf8ed2da8802cc3820686039c9ed00ca8eb5d6",
+      "modules/steps-3col/preview.html": "58ecf651879d597b8aec68d305f3b3c59091f373014eab37aeba04744500be64",
+      "modules/steps-horizontal/preview.html": "c958bfaabb21d41d0ca6477f5cad2c45e9b219712a3f7969fac35cb7d33b0d5e",
+      "modules/table/preview.html": "b3d6d773ac703a636c996584b94f580078e13bf916ab1e9fb6fb173622482375",
+      "modules/table-comparison/preview.html": "b70a4fadc8b3c6568fcd0c812e741090a014f271d13b7a19293e5710002b1b9f",
+      "modules/teaser-1col/preview.html": "e452ff5b7914aae7ffaa453819257f4e7d4383531f0065c2509a92efcbf8df39",
+      "modules/teaser-2col-alternating/preview.html": "59d09cacd0b28c5a16cb5458e5bd9b419b5373f8e96bb6a17105279feac583aa",
+      "modules/teaser-2col-gallery/preview.html": "c8681fa540d8e0e1cb338b83ce17728778917cdee90c42d5a7a1feb7cf6144a9",
+      "modules/teaser-2col-horizontal/preview.html": "6827e9633c7a6bdd977d1acba0bcfbf362143165f92666ee4521e7b0106f5091",
+      "modules/teaser-2col-listing/preview.html": "32f61a6265f886d47feefcea71365f4610d5b18e92184438e997318e73236b03",
+      "modules/teaser-2col-vertical/preview.html": "fb861ce4d7168046e4755469c963d1b67acfa292e3220f03c4b9b9740d762a82",
+      "skill/references/service-products.json": "e9514a461278aa1a663d233b3f991ba6f11fbac293adae945c515a774e5ac92b",
+      "modules/preview.css": "5ac93eabca79157a1306f774eae1abd4fe325dd84d371b1958146ed783c75b4f"
+    }
+  },
+  "moduleCounts": {
+    "email": 38,
+    "lp": 34
+  }
+}
