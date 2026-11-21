@@ -323,6 +323,7 @@ function renderTokenContent(itemId) {
 
   if (itemId === "colors") {
     return `
+      ${renderNote({ text: tokens.colors.usage })}
       <div class="ft-swatch-groups">
         ${tokens.colors.groups
           .map(

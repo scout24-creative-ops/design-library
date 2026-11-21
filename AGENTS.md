@@ -42,6 +42,13 @@ Screenshots, Templates oder Archive werden nicht in dieses öffentliche Repo kop
 
 ## Darstellung und Bestandsschutz
 
+Die Farbenansicht richtet sich an Kolleg:innen: LP-/E-Mail-Akzentfarben getrennt,
+gemeinsame neutrale Farben einmalig und ein Hinweis auf die Modulregeln.
+Technische semantische Alias-/Hover-/Rahmenfarben nicht wieder als zusätzliche
+Standardauswahl aufnehmen. Alle angezeigten Farbwerte aus der zentralen Quelle
+ableiten; diese UI-Auswahl ändert weder Tokens noch Modulfreigaben.
+
+
 Alle kanonischen Module genau einmal in der Navigation abdecken. Modulmarkup
 unverändert extrahieren. Shadow-DOM-Vorschauen isoliert halten. Nur die vorhandenen
 sicheren Preview-Interaktionen für Accordion, Counter und YouTube verwenden;

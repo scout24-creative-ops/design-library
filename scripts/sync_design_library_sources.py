@@ -44,11 +44,6 @@ def generate(email_dir, lp_dir, email_only=False, design_system_dir=DEFAULT_DESI
         lp_section['label'] = 'LP-Module'
         tokens = json.loads((tokens_path).read_text())
         token_snapshot = build_tokens_snapshot(tokens)
-        for key in ('palette', 'semantic'):
-            token_snapshot['colors']['groups'].append({
-                'title': 'E-Mail-Farben' if key == 'palette' else 'Semantische E-Mail-Farben',
-                'items': [{'name': name, 'value': value} for name, value in tokens['colors'][key]['email'].items()]
-            })
         data = {'sections': {'email': navigation, 'lp': lp_section, 'tokens': {
             'label': 'Design-Tokens', 'items': [{'id': key, 'label': label, 'kind': 'tokens'} for key, label in [
                 ('colors', 'Colors'), ('typography', 'Typography'), ('spacing', 'Spacing'),

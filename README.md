@@ -22,6 +22,15 @@ Die Originalmodule bleiben in `email-builder` und `lp-builder`. Die gemeinsamen
 Design-Tokens bleiben in `design-system`. Das Repo kopiert weder Builder-Quellen
 noch den gemeinsamen Token-Quellbestand in eine zweite gepflegte Bibliothek.
 
+## Farben für Kolleg:innen
+
+Die Farbübersicht zeigt getrennte LP- und E-Mail-Akzentfarben sowie einmalig die
+gemeinsamen neutralen Farben. Werte werden aus der zentralen Token-Datei gelesen;
+die Library pflegt keine eigenen Farbwerte. Technische Rollen wie Text-, Rahmen-
+und Hover-Tokens bleiben in der zentralen Quelle erhalten und werden hier nicht
+als zusätzliche Farbauswahl gezeigt. Welche Palette an einem bestimmten Slot
+einsetzbar ist, bestimmt weiterhin der jeweilige Modulvertrag.
+
 ## Aktualisieren
 
 Die drei Quellrepos müssen als lesbare Checkouts vorliegen. Standardmäßig werden
