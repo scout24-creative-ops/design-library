@@ -1,0 +1,134 @@
+{
+  "label": "E-Mail-Module",
+  "items": [
+    {
+      "id": "logo",
+      "label": "Logo",
+      "kind": "emailModules",
+      "modules": [
+        "logo",
+        "logo-centered"
+      ]
+    },
+    {
+      "id": "heros-left",
+      "label": "Hero Left Aligned",
+      "kind": "emailModules",
+      "modules": [
+        "hero-image-top",
+        "hero-image-top-bleed",
+        "hero-cta-top",
+        "hero-cta-top-no-bottom"
+      ]
+    },
+    {
+      "id": "heros-center",
+      "label": "Hero Centered",
+      "kind": "emailModules",
+      "modules": [
+        "hero-image-top-center",
+        "hero-image-top-bleed-center",
+        "hero-cta-top-center",
+        "hero-cta-top-no-bottom-center",
+        "hero-image-head-copy-bleed-center"
+      ]
+    },
+    {
+      "id": "heros-fakeforms",
+      "label": "Fake Forms",
+      "kind": "emailModules",
+      "modules": [
+        "hero-image-textbox-cta-center"
+      ]
+    },
+    {
+      "id": "teaser",
+      "label": "Teaser",
+      "kind": "emailModules",
+      "modules": [
+        "teaser-1col",
+        "teaser-2col-vertical",
+        "teaser-2col-horizontal",
+        "teaser-2col-alternating",
+        "teaser-2col-listing",
+        "teaser-2col-gallery"
+      ]
+    },
+    {
+      "id": "benefits",
+      "label": "Benefits",
+      "kind": "emailModules",
+      "modules": [
+        "benefits-3col"
+      ]
+    },
+    {
+      "id": "steps",
+      "label": "Steps",
+      "kind": "emailModules",
+      "modules": [
+        "steps-3col",
+        "steps-horizontal"
+      ]
+    },
+    {
+      "id": "contact",
+      "label": "Contact",
+      "kind": "emailModules",
+      "modules": [
+        "contact"
+      ]
+    },
+    {
+      "id": "tables",
+      "label": "Tables",
+      "kind": "emailModules",
+      "modules": [
+        "table",
+        "table-comparison"
+      ]
+    },
+    {
+      "id": "servicetiles",
+      "label": "Service Tiles",
+      "kind": "serviceProducts",
+      "modules": [
+        "servicetiles"
+      ]
+    },
+    {
+      "id": "loft",
+      "label": "LOFT",
+      "kind": "emailModules",
+      "modules": [
+        "loft-snl-copy-cta",
+        "loft-snl-copy-sections-cta",
+        "loft-rnl-dev-intro",
+        "loft-rnl-dev-teaser-1col",
+        "loft-regio-resi-intro",
+        "loft-regio-resi-teaser-1col"
+      ]
+    },
+    {
+      "id": "projects",
+      "label": "Projektmodule",
+      "kind": "emailModules",
+      "modules": [
+        "contact-signoff",
+        "hero-fakeform-buttons-image",
+        "homeowner-intro",
+        "homeowner-agent-cards",
+        "homeowner-market-development",
+        "homeowner-quick-prompt-dark"
+      ]
+    },
+    {
+      "id": "footer",
+      "label": "Footer",
+      "kind": "emailModules",
+      "modules": [
+        "footer"
+      ]
+    }
+  ]
+}

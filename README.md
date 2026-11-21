@@ -1,12 +1,71 @@
 # Design Library
 
-E-Mail-Module, LP-Module und Design-Tokens in einer gemeinsamen Library.
-
+E-Mail-Module, LP-Module und Design-Tokens:
 https://scout24-creative-ops.github.io/design-library/
 
-Dieses Repository enthält die generierte statische Ausgabe. Die gepflegten
-Quellen werden separat verwaltet; hier keine parallelen Module bearbeiten.
-Das öffentliche Manifest enthält Bereiche, Modulanzahl und einen Build-Fingerabdruck.
+Dieses Repository enthält die Oberfläche, ihre Generatoren und Prüfungen sowie
+alle veröffentlichten Dateien. GitHub Pages liefert `main` direkt aus `/` aus.
+Die Dateien der Oberfläche werden hier direkt gepflegt. Es gibt kein zweites
+Library-Quellrepo und keinen Kopierschritt in ein separates Veröffentlichungsrepo.
 
-GitHub Pages: Branch main, Verzeichnis / (root). Kein Build-Schritt erforderlich.
-Bestehende Webseiten und ihre Asset-Adressen sind von dieser Library unabhängig.
+## Wo liegt was?
+
+- `index.html`, `app.js`, `styles.css`: die gepflegte Library-Oberfläche.
+- `content-data.js`, `lp-module-markup.js`, `lp-shadow-styles.js`,
+  `email-preview-styles.css`, `manifest.json`: erzeugte Vorschauen; nicht manuell ändern.
+- `library-data/`: Einordnung der Module in der Navigation.
+- `scripts/`: Erzeugung aus den kanonischen Quellen.
+- `tests/`: Navigation, Quelltreue, Erzeugung und optionale Browserprüfung.
+- `AGENTS.md`: Regeln für Änderungen mit ChatGPT oder Codex.
+
+Die Originalmodule bleiben in `email-builder` und `lp-builder`. Die gemeinsamen
+Design-Tokens bleiben in `design-system`. Das Repo kopiert weder Builder-Quellen
+noch den gemeinsamen Token-Quellbestand in eine zweite gepflegte Bibliothek.
+
+## Aktualisieren
+
+Die drei Quellrepos müssen als lesbare Checkouts vorliegen. Standardmäßig werden
+sie neben diesem Repo erwartet; abweichende Pfade sind explizit möglich:
+
+```sh
+python3 scripts/sync_design_library_sources.py \
+  --email-builder-dir ../email-builder \
+  --lp-builder-dir ../lp-builder \
+  --design-system-dir ../design-system
+python3 scripts/sync_design_library_sources.py --check
+EMAIL_BUILDER_DIR=../email-builder LP_BUILDER_DIR=../lp-builder DESIGN_SYSTEM_DIR=../design-system \
+  python3 -m unittest discover -s tests
+node tests/test_library_routes.cjs
+```
+
+`--email-only` aktualisiert nur die E-Mail-Vorschauen, Produkte, E-Mail-Styles und
+den Build-Fingerabdruck. LP-Vorschauen und Token-Anzeige bleiben erhalten; dafür
+werden weder LP- noch Token-Quellen gelesen.
+
+Für reine UI-Änderungen genügt anschließend `python3 scripts/sync_design_library_sources.py --refresh-manifest`. Das aktualisiert den Fingerabdruck ohne Zugriff auf Quellrepos; es ersetzt keinen Modul-/Token-Quellvergleich.
+
+Änderungen werden in **diesem Repo** als PR geprüft und gemerged. Danach liefert
+GitHub Pages denselben Stand aus. Es ist kein weiterer Veröffentlichungs-PR in
+einem anderen Repo nötig. Der Build-Fingerabdruck im öffentlichen Manifest
+beschreibt die darstellungsrelevanten Dateien; er enthält keine privaten Quellpfade.
+
+## Prüfen und lokal ansehen
+
+```sh
+python3 -m unittest discover -s tests
+node tests/test_library_routes.cjs
+python3 -m http.server 8765
+```
+
+Ohne Quell-Checkouts laufen die eigenständigen Prüfungen; Quellvergleichstests
+werden ausdrücklich übersprungen. Ein solcher Lauf belegt keine vollständige
+Regenerierung. Die CI benötigt dafür weder private Quellen noch Zugangsdaten.
+Die vorhandene Browserprüfung `node tests/check_browser.cjs` ist optional und
+benötigt Playwright/Chromium sowie den lokalen Server; sie wartet auf externe LP-Styles.
+
+## Bestehende Systeme
+
+Die öffentliche Library-URL und alle vorhandenen Root-Dateiadressen bleiben
+bestehen. Bestehende LP-Runtime-Dateien und Contentful-Assets werden hier nicht
+verändert. Das alte öffentliche Library-Repo bleibt ausschließlich für die schon
+veröffentlichten Weiterleitungen und historischen Asset-URLs bestehen.
