@@ -1,0 +1,13 @@
+{
+  "name": "Design Library",
+  "sections": [
+    "email",
+    "lp",
+    "tokens"
+  ],
+  "moduleCounts": {
+    "email": 38,
+    "lp": 34
+  },
+  "buildDigest": "25b6405080aa004be50a94c89656b866ed8b22283e0b67e67ac64266551fd46b"
+}
