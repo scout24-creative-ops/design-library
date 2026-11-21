@@ -29,7 +29,6 @@
   --button-outline-weak-border: #D9D9D9;
   --chevron-icon: url("https://library.eu.iterable.com/33/98/a178a6459c3c432291d8c25be0f40928-emb_chevron-icon.png");
   --font-family-base: "Make It Better", Arial, Roboto, sans-serif;
-  --container-width: 600px;
   --logo-width: 185px;
   --logo-height: 47px;
   --logo-width-mobile-main: 165px;
@@ -258,7 +257,7 @@ a {
 .module__inner {
   width: min(100%, var(--container-width));
   margin: 0 auto;
-  padding: var(--space-60) var(--space-40);
+  padding: var(--space-60) var(--email-padding-desktop);
 }
 
 .module__inner--logo {
@@ -1140,7 +1139,7 @@ a {
 
 .teaser-columns {
   display: grid;
-  gap: var(--space-20);
+  gap: var(--email-column-gap);
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
@@ -1158,7 +1157,7 @@ a {
 
 .cards-3 {
   display: grid;
-  gap: var(--space-20);
+  gap: var(--email-column-gap);
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
@@ -1181,7 +1180,7 @@ a {
 
 .benefits-columns {
   display: grid;
-  gap: var(--space-20);
+  gap: var(--email-column-gap);
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
@@ -1286,7 +1285,7 @@ a {
 
 .steps-grid {
   display: grid;
-  gap: var(--space-20);
+  gap: var(--email-column-gap);
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
@@ -1328,7 +1327,7 @@ a {
 .teaser-split {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--space-20);
+  gap: var(--email-column-gap);
   align-items: center;
 }
 
@@ -1361,7 +1360,7 @@ a {
 .gallery-grid__row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--space-20);
+  gap: var(--email-column-gap);
 }
 
 .gallery-grid__row + .gallery-grid__row {
@@ -1384,7 +1383,7 @@ a {
 .listing-row {
   display: grid;
   grid-template-columns: var(--listing-media-width) minmax(0, 1fr);
-  gap: var(--space-20);
+  gap: var(--email-column-gap);
   align-items: start;
 }
 
@@ -1641,7 +1640,7 @@ a {
 
 .comparison-grid {
   display: grid;
-  gap: var(--space-20);
+  gap: var(--email-column-gap);
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
@@ -1699,8 +1698,8 @@ a {
 
   .module__inner {
     width: 100%;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: var(--email-padding-mobile);
+    padding-right: var(--email-padding-mobile);
   }
 
   .module[data-module="teaser-1col"] .module__inner,
@@ -2158,3 +2157,12 @@ a {
     line-height: var(--line-height-body-tabular);
   }
 }
+
+/* BEGIN GENERATED CONTENT FACTORY LAYOUT */
+:root {
+  --container-width: 600px;
+  --email-padding-desktop: 40px;
+  --email-padding-mobile: 20px;
+  --email-column-gap: 20px;
+}
+/* END GENERATED CONTENT FACTORY LAYOUT */

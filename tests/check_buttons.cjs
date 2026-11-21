@@ -2,6 +2,7 @@
 const {chromium} = require('playwright');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
+const {previewFrames}=require('./browser_helpers.cjs');
 (async () => {
   const browser = await chromium.launch({headless: true,
     ...(process.env.CHROMIUM_EXECUTABLE_PATH ? {executablePath: process.env.CHROMIUM_EXECUTABLE_PATH} : {}),
@@ -21,10 +22,7 @@ const fs = require('node:fs');
       for (const [route, count] of [['email/buttons', 4], ['lp/buttons-links', 6]]) {
         await page.goto('http://127.0.0.1:8765/#' + route, {waitUntil: 'networkidle'});
         await page.locator(`[data-sidebar-item="${route.split('/')[1]}"].is-active`).waitFor();
-        if (route.startsWith('lp')) {
-          await page.waitForFunction(() => [...document.querySelectorAll('.ft-lp-shadow-host')].every(
-            host => [...host.shadowRoot.querySelectorAll('link')].every(link => link.sheet)));
-        }
+        const frames = await previewFrames(page);
         const cards = page.locator('.ft-lp-element-card');
         assert.equal(await cards.count(), count);
         assert.equal(await page.locator('.module-copy__button').count(), count);
@@ -36,7 +34,7 @@ const fs = require('node:fs');
           const documentY = box.y + await page.evaluate(() => scrollY);
           assert.ok(documentY >= previousBottom, `${route} must stack at ${width}px`);
           previousBottom = documentY + box.height;
-          const anchor = card.locator(route.startsWith('lp') ? '.frame-root a' : '.test-email-preview a');
+          const anchor = frames[i].locator('#preview-root a');
           assert.equal(await anchor.count(), 1);
           const anchorBox = await anchor.boundingBox();
           const copyBox = await card.locator('.module-copy__button').boundingBox();
@@ -48,7 +46,7 @@ const fs = require('node:fs');
           const value = await page.evaluate(() => window.copiedValue);
           assert.equal((value.match(/<a\b/g) || []).length, 1);
           const expected = route.startsWith('lp')
-            ? await card.locator('.frame-root').evaluate(el => el.innerHTML)
+            ? await frames[i].locator('#preview-root').evaluate(el => el.innerHTML)
             : await anchor.evaluate(el => el.outerHTML);
           assert.equal(value, expected);
           copied.add(value);
