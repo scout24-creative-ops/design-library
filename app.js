@@ -3,7 +3,6 @@ const data = window.designLibraryData;
 const state = {
   section: "email",
   item: "logo",
-  previewMode: window.matchMedia("(max-width: 668px)").matches ? "mobile" : "desktop",
 };
 
 
@@ -29,46 +28,26 @@ const EMAIL_BUTTON_VARIANTS = [
 ];
 
 let previewSerial = 0;
-const previewObserver = typeof ResizeObserver === 'function' ? new ResizeObserver(entries => {
-  entries.forEach(entry => sizePreview(entry.target));
-}) : null;
-
-function renderPreviewToolbar(item) {
-  if (!['email', 'lp'].includes(state.section) && item.kind !== 'lpElements') return '';
-  const channel = state.section === 'email' ? 'email' : 'lp';
-  const sizes = data.layout[channel].referenceViewports;
-  return `<div class="ft-preview-toolbar" aria-label="Vorschaugröße">
-    ${['desktop', 'mobile'].map(mode => `<button type="button" data-preview-mode="${mode}"
-      aria-pressed="${state.previewMode === mode}">${mode === 'desktop' ? 'Desktop' : 'Mobil'} · ${sizes[mode]} px</button>`).join('')}
-    <span>Originalgröße im Vorschaufenster · passend verkleinert</span>
-  </div>`;
-}
-
-function bindPreviewToolbar() {
-  contentRoot.querySelectorAll('[data-preview-mode]').forEach(button => {
-    button.addEventListener('click', () => { state.previewMode = button.dataset.previewMode; render(); });
-  });
-}
-
 function sizePreview(host) {
   const frame = host.querySelector('iframe');
-  if (!frame) return;
-  const width = Number(frame.dataset.viewportWidth);
+  const canvas = host.querySelector('.ft-preview-canvas');
+  if (!frame || !canvas) return;
+  const width = Number(frame.dataset.canvasWidth || frame.dataset.viewportWidth);
+  const left = Number(frame.dataset.canvasLeft || 0);
   const height = Number(frame.dataset.contentHeight || 240);
-  const scale = Math.min(1, host.clientWidth / width);
-  frame.style.transform = `scale(${scale})`;
-  frame.style.left = `${Math.max(0, (host.clientWidth - width * scale) / 2)}px`;
-  host.style.height = `${Math.ceil(height * scale)}px`;
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+  frame.style.left = `${-left}px`;
 }
 
 function mountPreview(host, request) {
   if (host.querySelector('iframe')) return;
-  const width = data.layout[request.channel].referenceViewports[state.previewMode];
+  const width = data.layout[request.channel].referenceViewports.desktop;
   const key = `preview-${++previewSerial}`;
   const query = new URLSearchParams({...request, key});
   const frame = document.createElement('iframe');
   frame.src = `./preview.html?${query}`;
-  frame.title = `${request.module || request.element} · ${width} px`;
+  frame.title = `${request.module || request.element} · Originalgröße`;
   frame.setAttribute('sandbox', 'allow-scripts');
   frame.dataset.previewKey = key;
   frame.dataset.viewportWidth = String(width);
@@ -76,8 +55,13 @@ function mountPreview(host, request) {
   frame.style.height = '240px';
   host.innerHTML = '';
   host.classList.add('ft-viewport-host');
-  host.appendChild(frame);
-  previewObserver?.observe(host);
+  host.tabIndex = 0;
+  host.setAttribute('role', 'region');
+  host.setAttribute('aria-label', `${request.module || request.element} – Modulvorschau in Originalgröße, horizontal scrollbar`);
+  const canvas = document.createElement('div');
+  canvas.className = 'ft-preview-canvas';
+  canvas.appendChild(frame);
+  host.appendChild(canvas);
   sizePreview(host);
 }
 
@@ -87,10 +71,15 @@ window.addEventListener('message', event => {
   const frame = Array.from(contentRoot.querySelectorAll('iframe[data-preview-key]'))
     .find(frame => frame.contentWindow === event.source && frame.dataset.previewKey === message.key);
   if (!frame || message.width !== Number(frame.dataset.viewportWidth) ||
-      !Number.isFinite(message.height) || message.height < 1 || message.height > 30000) return;
+      !Number.isFinite(message.height) || message.height < 1 || message.height > 30000 ||
+      !Number.isFinite(message.canvasLeft) || message.canvasLeft < 0 ||
+      !Number.isFinite(message.canvasWidth) || message.canvasWidth < 1 ||
+      message.canvasLeft + message.canvasWidth > message.width) return;
   frame.dataset.contentHeight = String(message.height);
+  frame.dataset.canvasLeft = String(message.canvasLeft);
+  frame.dataset.canvasWidth = String(message.canvasWidth);
   frame.style.height = `${message.height}px`;
-  sizePreview(frame.parentElement);
+  sizePreview(frame.parentElement.parentElement);
 });
 
 function escapeHtml(value) {
@@ -750,7 +739,6 @@ function renderSectionContent(sectionKey, item) {
 }
 
 function renderSection() {
-  previewObserver?.disconnect();
   const currentSection = data.sections[state.section];
   const items = getSectionItems(state.section);
   const currentItem = items.find((item) => item.id === state.item) || items[0];
@@ -764,7 +752,6 @@ function renderSection() {
   renderSidebar(items, currentSection.label, state.section);
 
   contentRoot.innerHTML = `
-    ${renderPreviewToolbar(currentItem)}
     ${noteHtml}
 
     <section class="${sectionClass}">
@@ -772,7 +759,6 @@ function renderSection() {
     </section>
   `;
 
-  bindPreviewToolbar();
   bindCopyButtons();
   bindModuleCopyButtons();
   hydrateEmailPreviewScopes();

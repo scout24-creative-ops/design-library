@@ -2,7 +2,7 @@
 const {chromium} = require('playwright');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
-const {previewFrames,selectPreviewMode}=require('./browser_helpers.cjs');
+const {previewFrames}=require('./browser_helpers.cjs');
 (async () => {
   const browser = await chromium.launch({headless: true,
     ...(process.env.CHROMIUM_EXECUTABLE_PATH ? {executablePath: process.env.CHROMIUM_EXECUTABLE_PATH} : {}),
@@ -20,7 +20,6 @@ const {previewFrames,selectPreviewMode}=require('./browser_helpers.cjs');
         await page.goto('http://127.0.0.1:8765/#' + route, {waitUntil:'domcontentloaded'});
         await page.locator(`[data-sidebar-item="${route.split('/')[1]}"].is-active`).waitFor();
         await page.locator('#ft-content > section').waitFor();
-        await selectPreviewMode(page, width);
         const frames=await previewFrames(page);
         const preview=frames[0];
         // Hash navigation changes color through a short CSS transition.
@@ -84,7 +83,7 @@ const {previewFrames,selectPreviewMode}=require('./browser_helpers.cjs');
           const summary=preview.locator('.lpb-product-comparison__group-summary').last();
           await summary.click();
           assert.equal(await summary.evaluate(el=>el.parentElement.open),true);
-          if (width===390) assert.equal(await preview.locator('.lpb-product-comparison__scroller').evaluate(el=>el.scrollWidth>el.clientWidth),true);
+          assert.equal(await preview.evaluate(()=>innerWidth),1600);
         }
         if (route === 'lp/sticky-footer') {
           const footer=preview.locator('.lpb-sticky-footer');

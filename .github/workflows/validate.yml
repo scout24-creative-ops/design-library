@@ -37,7 +37,7 @@ jobs:
         run: |
           npm install --no-save playwright
           npx playwright install --with-deps chromium
-      - name: Review desktop and mobile previews
+      - name: Review original-size previews in wide and narrow windows
         run: |
           python3 -m http.server 8765 > /tmp/design-library-server.log 2>&1 &
           library_review_status=0
