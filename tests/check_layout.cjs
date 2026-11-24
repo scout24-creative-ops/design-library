@@ -65,7 +65,8 @@ let browser;
     for (const channel of ['email','lp']) {
       for (const item of data.sections[channel].items.filter(item=>item.modules?.length)) {
         await page.goto(`http://127.0.0.1:8765/#${channel}/${item.id}`,{waitUntil:'domcontentloaded'});
-        await page.locator(`[data-sidebar-item="${item.id}"].is-active`).waitFor();
+        // A grouped section and its selected child can share the same route.
+        await page.locator(`[data-sidebar-item="${item.id}"].is-active`).first().waitFor();
         assert.equal(await page.locator('[data-preview-mode],.ft-preview-toolbar').count(),0);
         const frames=await previewFrames(page);
         const handles=await page.locator('iframe[data-preview-key]').elementHandles();
