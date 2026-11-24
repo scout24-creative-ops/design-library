@@ -50,7 +50,7 @@ ableiten; diese UI-Auswahl ändert weder Tokens noch Modulfreigaben.
 
 
 Alle kanonischen Module genau einmal in der Navigation abdecken. Modulmarkup
-unverändert extrahieren. Modulvorschauen in sandboxed Iframes mit eigenen Referenz-Viewports isolieren. Die Library-Oberfläche besitzt ein unabhängiges Layout; sie darf Containerbreiten und Breakpoints im Iframe nicht verändern. Nur die vorhandenen
+unverändert extrahieren. Modulvorschauen in sandboxed Iframes mit festen Desktop-Referenz-Viewports isolieren. Keine Mobilumschaltung oder visuelle Skalierung; bei wenig Platz im eigenen Rahmen horizontal scrollen. Äußere leere Viewport-Ränder dürfen ausgespart werden, ohne Modulflächen zu beschneiden oder deren Originalgröße zu verändern. Die Library-Oberfläche besitzt ein unabhängiges Layout; sie darf Containerbreiten und Breakpoints im Iframe nicht verändern. Nur die vorhandenen
 sicheren Preview-Interaktionen für Accordion, Counter und YouTube verwenden;
 keine Tracking-/Produktionsskripte laden. Produktions-CSS bleibt an den freigegebenen
 CoreCSS- und LP-Bridge-URLs des tatsächlichen Renderers verlinkt; keine zweite gepflegte Bridge-CSS erzeugen.

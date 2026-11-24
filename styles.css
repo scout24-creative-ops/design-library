@@ -1948,9 +1948,6 @@ body {
 /* Bound full-bleed production previews to their Library panel. */
 .ft-lp-shadow-host { min-width: 0; }
 
-.ft-preview-toolbar { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-bottom:24px; }
-.ft-preview-toolbar button { padding:8px 14px; border:1px solid #ADADAD; border-radius:999px; background:#fff; color:#676767; cursor:pointer; }
-.ft-preview-toolbar button[aria-pressed="true"] { border-color:#333; color:#333; font-weight:700; }
-.ft-preview-toolbar span { color:#676767; font-size:12px; }
-.ft-viewport-host { position:relative; min-width:0; width:100%; overflow:hidden; }
-.ft-viewport-host iframe { position:absolute; top:0; display:block; max-width:none; border:0; transform-origin:top left; }
+.ft-viewport-host { min-width:0; width:100%; overflow-x:auto; overflow-y:hidden; }
+.ft-preview-canvas { position:relative; flex-shrink:0; overflow:hidden; }
+.ft-preview-canvas iframe { position:absolute; top:0; display:block; max-width:none; border:0; }

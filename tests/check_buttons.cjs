@@ -1,8 +1,8 @@
-// Focused desktop/mobile review; requires the local server and Playwright.
+// Fixed-size module previews in wide/narrow Library windows; requires the local server and Playwright.
 const {chromium} = require('playwright');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
-const {previewFrames,selectPreviewMode}=require('./browser_helpers.cjs');
+const {previewFrames}=require('./browser_helpers.cjs');
 (async () => {
   const browser = await chromium.launch({headless: true,
     ...(process.env.CHROMIUM_EXECUTABLE_PATH ? {executablePath: process.env.CHROMIUM_EXECUTABLE_PATH} : {}),
@@ -22,7 +22,6 @@ const {previewFrames,selectPreviewMode}=require('./browser_helpers.cjs');
       for (const [route, count] of [['email/buttons', 4], ['lp/buttons-links', 6]]) {
         await page.goto('http://127.0.0.1:8765/#' + route, {waitUntil: 'domcontentloaded'});
         await page.locator(`[data-sidebar-item="${route.split('/')[1]}"].is-active`).waitFor();
-        await selectPreviewMode(page, width);
         const frames = await previewFrames(page);
         const cards = page.locator('.ft-lp-element-card');
         assert.equal(await cards.count(), count);

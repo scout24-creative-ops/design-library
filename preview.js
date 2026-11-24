@@ -22,8 +22,23 @@ function stylesheet(href) {
 }
 
 function measure() {
-  const height = Math.max(1, Math.ceil(Math.max(root.scrollHeight, root.getBoundingClientRect().height)));
-  window.parent.postMessage({type:'design-library-preview', key, height, width:innerWidth}, '*');
+  const bounds = root.getBoundingClientRect();
+  const height = Math.max(1, Math.ceil(Math.max(root.scrollHeight, bounds.height)));
+  // Remove empty outer gutters, keeping the real desktop viewport and every
+  // rendered module edge (including full-bleed content) at one CSS pixel per pixel.
+  let left = bounds.left;
+  let right = bounds.right;
+  root.querySelectorAll('*').forEach(element => {
+    const rect = element.getBoundingClientRect();
+    if (rect.width > 0 && rect.height > 0) {
+      left = Math.min(left, rect.left);
+      right = Math.max(right, rect.right);
+    }
+  });
+  const canvasLeft = Math.max(0, Math.floor(left));
+  const canvasWidth = Math.max(1, Math.min(innerWidth, Math.ceil(right)) - canvasLeft);
+  window.parent.postMessage({type:'design-library-preview', key, height,
+    width:innerWidth, canvasLeft, canvasWidth}, '*');
 }
 
 function emailMarkup() {

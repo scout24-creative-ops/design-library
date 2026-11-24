@@ -106,7 +106,7 @@ ihre vertikale Anordnung und jeden Copy-Inhalt. Optional lässt sich über
 `CHROMIUM_EXECUTABLE_PATH` ein vorhandenes Chromium verwenden.
 `node tests/check_optimizations.cjs` prüft aktive Navigation, Copy-Abstände,
 geladene 48px-Icons, alle fünf Accordion-Paare, Tabellen, Footer und Foundations
-bei beiden Breiten. Die CI führt beide Browserprüfungen aus und stellt Screenshots
+bei breiten und schmalen Library-Fenstern. Die CI führt beide Browserprüfungen aus und stellt Screenshots
 und Diagnosen für 14 Tage als Workflow-Artefakt bereit.
 
 ## Bestehende Systeme
@@ -118,23 +118,27 @@ veröffentlichten Weiterleitungen und historischen Asset-URLs bestehen.
 
 ## Verbindliche Vorschau-Geometrie
 
-Die Library-Oberfläche ist unabhängig von der gerenderten Modulfläche. `preview.html`
-und `preview.js` rendern Originalmarkup in sandboxed Iframes mit echten CSS-Viewports.
-Desktop/Mobil wählt LP 1600/392 px oder E-Mail 1150/400 px aus der generierten
-`layout`-Definition in `content-data.js`. Die äußere UI verkleinert nur visuell;
-Media Queries laufen im tatsächlichen Iframe-Viewport.
+Alle Modulvorschauen erscheinen in Originalgröße, ohne Desktop-/Mobilumschaltung,
+Skalierung oder automatischen Wechsel bei kleinen Browserfenstern. Zu breite
+Vorschauen sind im eigenen Rahmen horizontal scrollbar, auch per Tastatur.
+Die Library-Oberfläche bleibt unabhängig davon an das Browserfenster angepasst.
 
-Der LP-Wrapper bildet Contentful mit maximal 1200 px inklusive 16/24/32 px Padding
-nach; der E-Mail-Wrapper ist maximal 600 px breit und addiert kein Modul-Padding.
-Kopieraktionen bleiben außerhalb der Vorschau und liefern das kanonische Markup.
-Die Bridge-CSS ist auf den veröffentlichten Release
-`lp-builder/releases/contentful/layout-v1/lpbuilder-bridge.css` festgelegt; die
-JavaScript-Adresse bleibt unverändert. Der Generator prüft Release-Manifest und
-Bestands-Bridge, ohne Produktions-CSS zu kopieren oder durch Vorschau-Regeln zu
-ersetzen. Die Hero-Inhaltskanten werden im Browser gegen den Wrapper geprüft.
-Den Library-PR erst nach dem tatsächlichen Frontend-Rollout derselben CSS-Version
-übernehmen; ein Asset-Merge allein aktiviert keine Contentful-Einbindung.
+`preview.html` und `preview.js` rendern Originalmarkup in sandboxed Iframes mit
+festen Desktop-Referenz-Viewports: LP 1600 px, E-Mail 1150 px. Die Module bleiben
+dabei in ihren kanonischen Containern (LP maximal 1200 px inklusive 16/24/32 px
+Padding, E-Mail maximal 600 px ohne zusätzliches Modul-Padding). Leere äußere
+Viewport-Ränder werden bei der Einbettung ausgespart; gerenderte Modulflächen
+und Full-Bleed-Inhalte bleiben bei 1:1-Größe erhalten. Die Einbettung ändert
+weder den tatsächlichen Iframe-Viewport noch Modul-CSS oder Breakpoints.
+Die responsiven Regeln der Originalmodule bleiben Teil ihrer Originalquellen;
+die Library bietet keine gesonderte mobile Modulansicht mehr an.
 
-Prüfen: `node tests/check_layout.cjs` testet alle 72 Module an beiden Referenzbreiten
-und zusätzliche responsive Grenzen. Die vorhandenen Button-, Icon-, Tabellen-,
-Accordion- und Navigationsprüfungen verwenden dieselben isolierten Dokumente.
+Kopieraktionen stehen außerhalb der Vorschau und liefern unverändertes
+kanonisches Markup. Die Bridge-CSS bleibt auf dem veröffentlichten Release
+`lp-builder/releases/contentful/layout-v1/lpbuilder-bridge.css` festgelegt;
+die JavaScript-Adresse und die produktive Frontend-Einbindung bleiben unverändert.
+
+`node tests/check_layout.cjs` prüft alle 72 Module an ihren Desktop-Referenzbreiten
+sowie die eingebettete Originalgröße und horizontale Erreichbarkeit bei breiten
+und schmalen Library-Fenstern. Button-, Icon-, Tabellen-, Accordion- und
+Navigationsprüfungen verwenden dieselben isolierten Dokumente.
