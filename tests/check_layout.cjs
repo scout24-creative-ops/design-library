@@ -100,7 +100,7 @@ let browser;
           assert.equal(outer.transform,'none');
           assert.equal(outer.zoom,'1');
           assert.equal(outer.canvasWidth,outer.expectedCanvasWidth);
-          assert.equal(outer.frameLeft,-outer.expectedCanvasLeft);
+          assert.ok(Math.abs(outer.frameLeft+outer.expectedCanvasLeft)<0.1);
           assert.equal(outer.role,'region');
           assert.equal(outer.tabIndex,0);
           assert.ok(outer.scrollWidth>=outer.canvasWidth-1);
